@@ -15,6 +15,8 @@
     import locale from 'element-ui/lib/locale/lang/en';
     import ElementUI from 'element-ui';
     import Vue from 'vue';
+    const MD5 = require('md5.js');
+    import {Base64} from 'js-base64';
 
     // noinspection JSUnresolvedFunction
     Vue.use(ElementUI, {locale});
@@ -24,6 +26,12 @@
         components : {
             Hello,
         },
+
+        created() {
+            console.log(new MD5().update('aaaaa').digest('hex'));
+            console.log(new MD5().update('42').digest('hex'));
+            console.log(Base64.encode('dankogai'));
+        }
     };
 </script>
 
