@@ -1,0 +1,14 @@
+{% extends "slimvue/slimvue.twig" %}
+{% block exec %}
+    {% set controllerjs %}
+        <body></body>
+    {% endset %}
+    {{ controllerjs|striptags('<script>')|raw }}
+{% endblock %}
+{% block extracss %}
+    {% set extratags %}
+        <head></head>
+    {% endset %}
+    {{ extratags|striptags('<link>')|raw }}
+{% endblock %}
+
