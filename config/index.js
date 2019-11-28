@@ -14,11 +14,13 @@ module.exports = {
         assetsPublicPath     : '/',
         entryDirectory       : path.resolve(__dirname, '../' + packageInfo.name + '/entries'),
         packingTemplatesPath : path.resolve(__dirname, '../build/pack-templates'),
+        componentsDirectory : path.resolve(__dirname, '../' + packageInfo.name + '/components')
     },
     prod             : {
         env                      : require('./prod.env'),
         cssSourceMap             : true,
-        productionHtml           : false,
+        productionHtml           : true,
+        productionTwig           : true,
         // Gzip off by default as many popular static hosts such as
         // Surge or Netlify already gzip all static assets for you.
         // Before setting to `true`, make sure to:
@@ -64,6 +66,13 @@ module.exports = {
             return this.prod.productionHtml;
         }
     },
+    shouldOutputTwig(){
+        if (this.isDebug()) {
+            return false;
+        } else {
+            return this.prod.productionTwig;
+        }
+    },
     getEntries       : function () {
         let entries = {};
         let entryFiles = rreaddir(this.build.entryDirectory);
@@ -79,7 +88,25 @@ module.exports = {
                 entries[name] = path.join(this.build.entryDirectory, entryFile);
             }
         });
-        
+
         return entries;
+    },
+
+    getComponentsEntries: function () {
+        let components = {};
+        let componentsFiles = rreaddir(this.build.componentsDirectory);
+        // noinspection JSUnresolvedFunction
+        componentsFiles.forEach(componentFile => {
+            componentFile = path.relative(this.build.componentsDirectory, componentFile);
+            let result = (/(.*)\.vue$/).exec(componentFile);
+            if (result && componentFile.indexOf('/') === -1) {
+                let name = `${result[1]}`;
+                if (name === 'manifest' || name === 'vendor' || name === 'commons') {
+                    throw new Error("entry named " + name + " uses a reserved name");
+                }
+                components[name] = path.join(this.build.entryDirectory, componentFile);
+            }
+        });
+        return components;
     },
 };

@@ -1,6 +1,6 @@
 <template>
     <div id="slimvue">
-        <div>subapp</div>
+        <div>Index</div>
     </div>
 </template>
 
@@ -11,7 +11,7 @@
         name       : 'app',
         components : {},
         computed: {
-            ...mapState(['$md5', '$base64', '$page'])
+            ...mapState(['$md5','$base64','$page'])
         },
 
         created() {
@@ -25,7 +25,7 @@
 
 <style type="scss">
     #slimvue {
-        font-family             : 'Menlo', Helvetica, Arial, sans-serif;
+        font-family             : 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing  : antialiased;
         -moz-osx-font-smoothing : grayscale;
         text-align              : center;

@@ -1,6 +1,24 @@
 "use strict";
 
 import Vue from 'vue';
+import 'babel-polyfill';
+const PackageInfo = require('./package');
+const store = require('./' + PackageInfo.name + '/store/app');
+
+
+/**
+ * 加载ElementUI插件
+ */
+import ElementUI from 'element-ui';
+import './theme-oasis-blue/index.css';
+Vue.use(ElementUI);
+
+/**
+ * 复制到粘贴板功能
+ */
+import VueClipboard from 'vue-clipboard2';
+Vue.use(VueClipboard);
+
 
 // noinspection JSUnresolvedVariable
 Vue.config.productionTip = (process.env.NODE_ENV !== "production");
@@ -55,14 +73,17 @@ export default {
         else {
             console.warn("Div element already exists, will replace existing content.");
         }
-        
+
+
+        /**获取数据仓库**/
         let app = window.slimvue = new Vue({
             components : {
                 "slimvue-page" : vueComponent,
             },
+            store: store.default,
             el         : "#slimvue-app",
         });
-        
+
         return app;
     },
     log               : function (...args) {
