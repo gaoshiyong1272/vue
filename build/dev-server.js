@@ -66,7 +66,7 @@ app.use(hotMiddleware);
 let staticPath = path.posix.join(config.build.assetsPublicPath, config.build.assetsSubDirectory);
 app.use(staticPath, express.static('./static'));
 
-let uri = `http://localhost:${port}/htmls/${config.build.index}.html`;
+let uri = `http://localhost:${port}/${config.build.index}.html`;
 
 let _resolve;
 let readyPromise = new Promise(resolve => {

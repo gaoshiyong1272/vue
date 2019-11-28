@@ -84,7 +84,7 @@ Object.keys(config.getEntries()).forEach((entry) => {
             inject         : "body",
             chunks         : ['manifest', 'vendor', 'commons', entry],
             template       : path.join(config.build.packingTemplatesPath, 'debug.html'),
-            filename       : path.join(config.build.buildOutputRoot, `htmls/${entry}.html`),
+            filename       : path.join(config.build.buildOutputRoot, `${entry}.html`),
         }));
     }
 

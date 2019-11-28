@@ -2,7 +2,9 @@
  * Created by shiyonggao on 2019/2/25.
  */
 
-const state = {};
+const state = {
+    userinfo: {}
+};
 
 const actions = {};
 

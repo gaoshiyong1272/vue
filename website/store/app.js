@@ -4,12 +4,14 @@
 
 const MD5 = require('md5.js');
 
-
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueI18n from 'vue-i18n';
 import {Base64} from 'js-base64';
-import config from "../config/config";
+import Config from "../config/config";
+import Lodash from "lodash";
+import Jquery from "jquery";
+import Common from "../common"
 
 
 
@@ -46,7 +48,10 @@ const state = {
     $md5 : md5Fn,
     $base64: Base64,
     $page : 'index',
-    $config : config
+    $config : Config,
+    $lodash: Lodash,
+    $jquery: Jquery,
+    $helper : Common
 };
 
 
@@ -61,4 +66,4 @@ const store = new Vuex.Store({
     getters
 });
 
-export default store
+export default store;
