@@ -14,11 +14,16 @@ module.exports = {
         assetsPublicPath     : '/',
         entryDirectory       : path.resolve(__dirname, '../' + packageInfo.name + '/entries'),
         packingTemplatesPath : path.resolve(__dirname, '../build/pack-templates'),
+        componentsDirectory : path.resolve(__dirname, '../' + packageInfo.name + '/components'),
+        helperDirectory: path.resolve(__dirname, '../' + packageInfo.name + '/helper'),
+        modulesDirectory: path.resolve(__dirname, '../' + packageInfo.name + '/store/modules'),
+
     },
     prod             : {
         env                      : require('./prod.env'),
         cssSourceMap             : true,
-        productionHtml           : false,
+        productionHtml           : true,
+        productionTwig           : false,
         // Gzip off by default as many popular static hosts such as
         // Surge or Netlify already gzip all static assets for you.
         // Before setting to `true`, make sure to:
@@ -64,6 +69,17 @@ module.exports = {
             return this.prod.productionHtml;
         }
     },
+    shouldOutputTwig(){
+        if (this.isDebug()) {
+            return false;
+        } else {
+            return this.prod.productionTwig;
+        }
+    },
+
+    /**
+     * 获取entry目录文件
+     */
     getEntries       : function () {
         let entries = {};
         let entryFiles = rreaddir(this.build.entryDirectory);
@@ -79,7 +95,73 @@ module.exports = {
                 entries[name] = path.join(this.build.entryDirectory, entryFile);
             }
         });
-        
+
         return entries;
     },
+
+    /**
+     * 获取components目录文件
+     */
+    getComponentsEntries: function () {
+        let components = {};
+        let componentsFiles = rreaddir(this.build.componentsDirectory);
+        // noinspection JSUnresolvedFunction
+        componentsFiles.forEach(componentFile => {
+            componentFile = path.relative(this.build.componentsDirectory, componentFile);
+            let result = (/(.*)\.vue$/).exec(componentFile);
+            if (result && componentFile.indexOf('/') === -1) {
+                let name = `${result[1]}`;
+                if (name === 'manifest' || name === 'vendor' || name === 'commons') {
+                    throw new Error("entry named " + name + " uses a reserved name");
+                }
+                components[name] = path.join(this.build.entryDirectory, componentFile);
+            }
+        });
+        return components;
+    },
+
+    /**
+     * 获取helpers目录文件
+     */
+    getHelpers : function () {
+        let helpers = {};
+        let helperFiles = rreaddir(this.build.helperDirectory);
+        // noinspection JSUnresolvedFunction
+        helperFiles.forEach(helperFile => {
+            helperFile = path.relative(this.build.helperDirectory, helperFile);
+            let result = (/(.*)\.js$/).exec(helperFile);
+            if (result && result[1] !== 'autoload') {
+                let name = `${result[1]}`;
+                if (name === 'manifest' || name === 'vendor' || name === 'commons') {
+                    throw new Error("entry named " + name + " uses a reserved name");
+                }
+                helpers[name] = path.join(this.build.helperDirectory, helperFile);
+            }
+        });
+
+        return helpers;
+    },
+
+    /**
+     * 获取helpers目录文件
+     */
+    getStoreModules: function () {
+        let modules = {};
+        let files = rreaddir(this.build.modulesDirectory);
+        // noinspection JSUnresolvedFunction
+        files.forEach(file => {
+            file = path.relative(this.build.modulesDirectory, file);
+            let result = (/(.*)\.js$/).exec(file);
+            if (result && result[1] !== 'autoload') {
+                let name = `${result[1]}`;
+                if (name === 'manifest' || name === 'vendor' || name === 'commons') {
+                    throw new Error("entry named " + name + " uses a reserved name");
+                }
+                modules[name] = path.join(this.build.modulesDirectory, file);
+            }
+        });
+
+        return modules;
+    },
+
 };

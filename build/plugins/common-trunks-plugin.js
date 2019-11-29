@@ -2,6 +2,7 @@ const path = require('path');
 const config = require('../../config');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const fs = require("fs")
 
 // noinspection JSUnresolvedFunction
 let plugins = [
@@ -32,35 +33,24 @@ let plugins = [
         }
     ),
 ];
-// noinspection JSUnresolvedVariable
-plugins.push(new HtmlWebpackPlugin({
-    chunksSortMode : 'manual',
-    inject         : 'head',
-    chunks         : ['manifest', 'vendor', 'commons'],
-    template       : path.join(config.build.packingTemplatesPath, 'slimvue.twig'),
-    filename       : path.join(config.build.buildOutputRoot, 'twigs', 'slimvue.twig'),
-}));
 
+// noinspection JSUnresolvedVariable
+if(config.shouldOutputTwig()) {
+    plugins.push(new HtmlWebpackPlugin({
+        chunksSortMode: 'manual',
+        inject: 'head',
+        chunks: ['manifest', 'vendor', 'commons'],
+        template: path.join(config.build.packingTemplatesPath, 'slimvue.twig'),
+        filename: path.join(config.build.buildOutputRoot, 'twigs', 'slimvue.twig'),
+    }));
+}
+
+// create html or twig
 Object.keys(config.getEntries()).forEach((entry) => {
     let file = path.basename(entry);
     let subPath = path.dirname(entry);
-    // console.log(`Adding html plugin for ${entry}, file = ${file}, subPath= ${subPath}`);
-    
-    // // noinspection JSUnresolvedVariable
-    // plugins.push(new HtmlWebpackPlugin({
-    //     chunksSortMode : 'manual',
-    //     chunks         : [],
-    //     template       : path.join(config.build.packingTemplatesPath, 'slimvue-page.twig'),
-    //     filename       : path.join(config.build.buildOutputRoot, 'twigs/pages', subPath, `${file}.twig`),
-    // }));
-    // noinspection JSUnresolvedVariable
-    plugins.push(new HtmlWebpackPlugin({
-        chunksSortMode : 'manual',
-        chunks         : [entry],
-        inject         : 'body',
-        template       : path.join(config.build.packingTemplatesPath, 'slimvue-page.twig'),
-        filename       : path.join(config.build.buildOutputRoot, 'twigs/pages', subPath, `${file}.twig`),
-    }));
+    console.log(`Adding html plugin for ${entry}, file = ${file}, subPath= ${subPath}`);
+
     if (config.shouldOutputHtml()) {
         // noinspection JSUnresolvedVariable
         plugins.push(new HtmlWebpackPlugin({
@@ -69,7 +59,17 @@ Object.keys(config.getEntries()).forEach((entry) => {
             inject         : "body",
             chunks         : ['manifest', 'vendor', 'commons', entry],
             template       : path.join(config.build.packingTemplatesPath, 'debug.html'),
-            filename       : path.join(config.build.buildOutputRoot, `htmls/${entry}.html`),
+            filename       : path.join(config.build.buildOutputRoot, `${entry}.html`),
+        }));
+    }
+
+    if (config.shouldOutputTwig()) {
+        plugins.push(new HtmlWebpackPlugin({
+            chunksSortMode: 'manual',
+            chunks: [entry],
+            inject: 'body',
+            template: path.join(config.build.packingTemplatesPath, 'slimvue-page.twig'),
+            filename: path.join(config.build.buildOutputRoot, 'twigs/pages', subPath, `${file}.twig`),
         }));
     }
 });
