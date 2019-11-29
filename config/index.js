@@ -14,7 +14,10 @@ module.exports = {
         assetsPublicPath     : '/',
         entryDirectory       : path.resolve(__dirname, '../' + packageInfo.name + '/entries'),
         packingTemplatesPath : path.resolve(__dirname, '../build/pack-templates'),
-        componentsDirectory : path.resolve(__dirname, '../' + packageInfo.name + '/components')
+        componentsDirectory : path.resolve(__dirname, '../' + packageInfo.name + '/components'),
+        helperDirectory: path.resolve(__dirname, '../' + packageInfo.name + '/helper'),
+        modulesDirectory: path.resolve(__dirname, '../' + packageInfo.name + '/store/modules'),
+
     },
     prod             : {
         env                      : require('./prod.env'),
@@ -73,6 +76,10 @@ module.exports = {
             return this.prod.productionTwig;
         }
     },
+
+    /**
+     * 获取entry目录文件
+     */
     getEntries       : function () {
         let entries = {};
         let entryFiles = rreaddir(this.build.entryDirectory);
@@ -92,6 +99,9 @@ module.exports = {
         return entries;
     },
 
+    /**
+     * 获取components目录文件
+     */
     getComponentsEntries: function () {
         let components = {};
         let componentsFiles = rreaddir(this.build.componentsDirectory);
@@ -109,4 +119,26 @@ module.exports = {
         });
         return components;
     },
+
+    /**
+     * 获取helpers目录文件
+     */
+    getHelpers : function () {
+        let helpers = {};
+        let helperFiles = rreaddir(this.build.helperDirectory);
+        helperFiles.forEach(helperFile => {
+            helperFile = path.relative(this.build.helperDirectory, helperFile);
+            let result = (/(.*)\.js$/).exec(helperFile);
+            if (result && result[1] !== 'autoload') {
+                let name = `${result[1]}`;
+                if (name === 'manifest' || name === 'vendor' || name === 'commons') {
+                    throw new Error("entry named " + name + " uses a reserved name");
+                }
+                helpers[name] = path.join(this.build.helperDirectory, helperFile);
+            }
+        });
+
+        return helpers;
+    },
+
 };

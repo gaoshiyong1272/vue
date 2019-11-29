@@ -11,7 +11,7 @@ import {Base64} from 'js-base64';
 import Config from "../config/config";
 import Lodash from "lodash";
 import Jquery from "jquery";
-import Common from "../common"
+import Common from "../helper/autoload"
 
 
 
