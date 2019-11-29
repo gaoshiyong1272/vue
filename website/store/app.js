@@ -14,9 +14,8 @@ import Jquery from "jquery";
 import Common from "../helper/autoload"
 
 
-
-
 /**root vuex**/
+
 import rootActions from './actions';
 import rootMutations from './mutations';
 import rootGetters from './actions';

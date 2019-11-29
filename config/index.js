@@ -126,6 +126,7 @@ module.exports = {
     getHelpers : function () {
         let helpers = {};
         let helperFiles = rreaddir(this.build.helperDirectory);
+        // noinspection JSUnresolvedFunction
         helperFiles.forEach(helperFile => {
             helperFile = path.relative(this.build.helperDirectory, helperFile);
             let result = (/(.*)\.js$/).exec(helperFile);
@@ -139,6 +140,28 @@ module.exports = {
         });
 
         return helpers;
+    },
+
+    /**
+     * 获取helpers目录文件
+     */
+    getStoreModules: function () {
+        let modules = {};
+        let files = rreaddir(this.build.modulesDirectory);
+        // noinspection JSUnresolvedFunction
+        files.forEach(file => {
+            file = path.relative(this.build.modulesDirectory, file);
+            let result = (/(.*)\.js$/).exec(file);
+            if (result && result[1] !== 'autoload') {
+                let name = `${result[1]}`;
+                if (name === 'manifest' || name === 'vendor' || name === 'commons') {
+                    throw new Error("entry named " + name + " uses a reserved name");
+                }
+                modules[name] = path.join(this.build.modulesDirectory, file);
+            }
+        });
+
+        return modules;
     },
 
 };
