@@ -11,7 +11,8 @@ import {Base64} from 'js-base64';
 import Config from "../config/config";
 import Lodash from "lodash";
 import Jquery from "jquery";
-import Common from "../helper/autoload"
+import Helper from "../helper/autoload"
+import Moment from "moment";
 
 
 /**root vuex**/
@@ -50,7 +51,8 @@ const state = {
     $config : Config,
     $lodash: Lodash,
     $jquery: Jquery,
-    $helper : Common
+    $helper : Helper,
+    $moment : Moment
 };
 
 

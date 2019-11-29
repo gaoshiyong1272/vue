@@ -60,23 +60,25 @@ import ${moduleName} from './${modulePath}';`;
     let entryCount = [];
     let modulesCount = []
     Object.keys(config.getComponentsEntries()).forEach((componentEntry) => {
-        componentEntry = componentEntry.toLocaleLowerCase();
         let entry = config.getEntries();
         let modules = config.getStoreModules();
 
         /**无Entry文件自动生产Entry入口文件**/
         if (!entry[componentEntry]) {
             /**读取文件，并替换文件内容**/
+            let componentName = componentEntry.toLocaleLowerCase();
             let buffer = fs.readFileSync(path.join(config.build.packingTemplatesPath, 'entry-js-template.js'));
             let content = String(buffer);
-            content = content.replace(/@entryname@/g, componentEntry);
+            content = content.replace(/@entryname@/g, componentName);
+            content = content.replace(/@pathname@/g, componentEntry);
+
 
             /**写文件**/
-            let fd = fs.openSync(path.join(config.build.entryDirectory, `${componentEntry}.js`), 'w');
+            let fd = fs.openSync(path.join(config.build.entryDirectory, `${componentName}.js`), 'w');
             fs.writeFileSync(fd, content);
             fs.closeSync(fd);
-            entryCount.push(componentEntry);
-            console.log('Entry created，Entry name => ', componentEntry)
+            entryCount.push(componentName);
+            console.log('Entry created，Entry name => ', componentName)
         }
         /**无Module文件自动生产Module入口文件**/
         if(!modules[componentEntry]) {
@@ -156,7 +158,5 @@ import ${moduleName} from './${modulePath}';`;
     fs.closeSync(fd);
     console.log('Store modules autoload file updated or created \n');
 })();
-
-
 
 module.exports = [];

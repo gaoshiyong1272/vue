@@ -6,7 +6,7 @@
  * state 中的方法命名规则（小驼峰规则）
  */
 const state = {
-    userinfo: {}
+
 };
 
 /**

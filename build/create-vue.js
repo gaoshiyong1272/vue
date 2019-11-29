@@ -1,28 +1,52 @@
-console.log('111111');
-const argparse = require('argparse');
+let args = process.argv.splice(2);
+const path = require('path');
+const config = require('../config');
+const fs = require("fs");
 
-const parser = new argparse.ArgumentParser({
-    version: '1.0.0',
-    description: 'CLI client for Socket.IO.'
-});
-parser.addArgument(
-    ['-i', '--interval'], {
-        help: 'Time interval for sending message in seconds.',
-        defaultValue: 10,
-        type: 'int'
+/**参数处理**/
+let reg = /^(v=|m=)[a-zA-Z]{1,}$/;
+let parseArgsinfo = [];
+let parseArgs = ()=>{
+    let param = args[0];
+    if(reg.test(param)){
+        let arr = param.split('=');
+        parseArgsinfo.push(arr[0], arr[1]);
+        return true;
+    }else {
+        console.log('Pass params is error, example: v=index or m=index')
+        return false;
     }
-);
-parser.addArgument(
-    ['-n', '--num-thread'], {
-        help: 'Number of threads for sending messages.',
-        defaultValue: 1,
-        type: 'int'
+};
+
+
+let createVueFile = () =>{
+    if(parseArgs()) {
+        let components = config.getComponentsEntries();
+        let moduleType = parseArgsinfo[0];
+        let moduleName = parseArgsinfo[1]
+
+        /**创建vue文件**/
+        if(moduleType === 'v') {
+            if (!components[moduleName]) {
+                /**读取文件，并替换文件内容**/
+                let buffer = fs.readFileSync(path.join(config.build.packingTemplatesPath, 'vue-templage.vue'));
+                let content = String(buffer);
+                content = content.replace(/@entryname@/g, moduleName);
+
+                /**写文件**/
+                let fd = fs.openSync(path.join(config.build.componentsDirectory, `${moduleName}.vue`), 'w');
+                fs.writeFileSync(fd, content);
+                fs.closeSync(fd);
+                console.log('Vue created，Vue name=> ', moduleName)
+            }
+        }
+        /**生成其他关系**/
+        require('./plugins/vue-auto-file-plugins');
     }
-);
-parser.addArgument('target', {
-    metavar: 'TARGET',
-    nargs: 1,
-    help: 'URL of Socket.IO server.'
-});
-const args = parser.parseArgs();
+};
+
+createVueFile();
+
+
+
 
