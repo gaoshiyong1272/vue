@@ -20,7 +20,7 @@ import Common from "../common"
 import rootActions from './actions';
 import rootMutations from './mutations';
 import rootGetters from './actions';
-import modules from './modules/load_modules';
+import modules from './modules/autoload';
 
 const locale = 'zh-CN';
 
