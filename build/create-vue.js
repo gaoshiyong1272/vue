@@ -3,8 +3,10 @@ const path = require('path');
 const config = require('../config');
 const fs = require("fs");
 
+
+
 /**参数处理**/
-let reg = /^(v=|m=)[a-zA-Z]{1,}$/;
+let reg = /^(v=|m=)[a-zA-Z]{3,}$/;
 let parseArgsinfo = [];
 let parseArgs = ()=>{
     let param = args[0];
@@ -39,9 +41,28 @@ let createVueFile = () =>{
                 fs.closeSync(fd);
                 console.log('Vue created，Vue name=> ', moduleName)
             }
+
+            /**生成其他关系**/
+            // require('./plugins/vue-auto-file-plugins');
+            //
+            // let port = process.env.PORT || config.build.port;
+            // let app = express();
+            // let server = app.listen(port);
+            //
+            // let pat = `cd ${__dirname}`;
+            // pat = pat.replace(/\//g, '//');
+            // let cmd = `${pat} && cd ../ && npm run dev`;
+            // console.log(cmd);
+            // server.close();
+            // exec(cmd, function (error, stdout, stderr) {
+            //     if (error) {
+            //         console.log(error);
+            //     } else {
+            //         console.log("重启成功");
+            //     }
+            // });
         }
-        /**生成其他关系**/
-        require('./plugins/vue-auto-file-plugins');
+
     }
 };
 

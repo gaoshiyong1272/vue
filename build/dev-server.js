@@ -4,8 +4,14 @@ const opn = require('opn');
 const path = require('path');
 const express = require('express');
 const webpack = require('webpack');
+const lodash = require('lodash');
+const fs = require("fs");
+const config = require('../config');
+const autoload = require('./autoload');
+const exec = require('child_process').exec;
+const notifier = require('node-notifier');
+const ICON = path.join(__dirname, 'icon.png');
 
-let config = require('../config');
 config.setDebug();
 if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = JSON.parse(config.build.env.NODE_ENV);
@@ -40,8 +46,69 @@ compiler.plugin('compilation', function (compilation) {
         // noinspection JSUnresolvedFunction
         hotMiddleware.publish({action : 'reload'});
         cb();
+        notifier.notify({
+            title: "提示",
+            message: '编译完成并自动刷新页面',
+            icon: ICON
+        });
     });
 });
+
+
+
+/***
+ * 编译完成处理,当entrys与components文件个数不一样，触发autoload逻辑
+ * @param stats
+ */
+
+const compilerDoneHanle = (stats)=> {
+    let entrys = lodash['keysIn'](config.getEntries());
+    let components = lodash['keysIn'](config.getComponentsEntries());
+
+    /**入口个数相同不处理**/
+    if (entrys.length === components.length) {
+        console.log('components无变化');
+        return;
+    }
+
+    console.log('创建文件完成开始');
+    autoload.helper();
+    autoload.entrys();
+    autoload.modules();
+    console.log('创建文件完成结束');
+
+    /**重载项目**/
+    let pat = `cd ${__dirname}`;
+    pat = pat.replace(/\//g, '//');
+    let cmd = `${pat} && cd ..// && npm run dev`;
+    console.log(cmd);
+    server.close();
+
+    exec(cmd, function (error, stdout, stderr) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('重启成功');
+        }
+    });
+
+    notifier.notify({
+        title: "提示",
+        message: '编译完成并重启服务',
+        icon: ICON
+    });
+};
+
+/**完成编译时触发该事件**/
+let doneTimeer = null;
+compiler.plugin('done', function (stats) {
+    if (doneTimeer) clearTimeout(doneTimeer);
+    doneTimeer = setTimeout(()=>{
+        compilerDoneHanle(stats);
+    }, 2000);
+});
+
+
 
 // proxy api requests
 Object.keys(proxyTable).forEach(function (context) {
@@ -77,10 +144,16 @@ console.log('> Starting dev server...');
 devMiddleware.waitUntilValid(() => {
     console.log('> Listening at ' + uri + '\n');
     // when env is testing, don't need open it
-    if (autoOpenBrowser && process.env.NODE_ENV !== 'testing' && 0) {
+    if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
         opn(uri);
     }
     _resolve();
+
+    notifier.notify({
+        title: "提示",
+        message: '编译完成并启动服务',
+        icon: ICON
+    });
 });
 
 let server = app.listen(port);

@@ -8,6 +8,7 @@ const resolveConfig = require('./resolve.conf');
 let resolve = resolveConfig.resolve;
 
 let entries = config.getEntries();
+
 // noinspection NpmUsedModulesInstalled
 let webpackConfig = {
     entry   : entries,
