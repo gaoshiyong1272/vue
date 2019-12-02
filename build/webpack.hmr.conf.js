@@ -9,6 +9,8 @@ Object.keys(baseWebpackConfig.entry).forEach(function (name) {
     // noinspection JSUnresolvedVariable
     baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name]);
 });
+
+
 // noinspection JSUnresolvedVariable
 baseWebpackConfig.output.chunkFilename = baseWebpackConfig.output.filename = 'js/[name].js';
 // noinspection JSUnresolvedFunction
@@ -23,6 +25,6 @@ module.exports = merge(baseWebpackConfig, {
         require('./plugins/vue-auto-file-plugins'),
         require('./plugins/common-trunks-plugin'),
         require('./plugins/copy-files-plugin'),
-        require('./plugins/hmr-plugin')
+        require('./plugins/hmr-plugin'),
     ),
 });

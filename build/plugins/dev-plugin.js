@@ -1,5 +1,8 @@
+// noinspection JSDeprecatedSymbols
+const path = require('path');
 const webpack = require('webpack');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+
 
 // noinspection JSDeprecatedSymbols
 module.exports = [
@@ -11,5 +14,11 @@ module.exports = [
     //     template : 'index.html',
     //     inject   : true
     // }),
-    new FriendlyErrorsPlugin({clearConsole : false}),
+    new FriendlyErrorsPlugin({
+        clearConsole : false,
+        onErrors(severity, errors){
+            console.log('FriendlyErrorsPlugin event=>', severity, errors);
+        },
+
+    })
 ];
