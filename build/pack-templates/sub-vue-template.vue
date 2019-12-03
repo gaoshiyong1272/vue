@@ -12,7 +12,7 @@
         props: [],
         components : {},
         computed: {
-            ...mapState(['$md5', '$base64', '$page', '$config', '$lodash', '$helper', '$i18n', '$moment']),
+            @rootStateLoad@,
         },
 
         created() {

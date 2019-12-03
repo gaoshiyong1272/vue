@@ -3,6 +3,12 @@ const path = require('path');
 const config = require('../config');
 const fs = require("fs");
 
+/**
+ * vue 加载root变量
+ * @type {string}
+ */
+let rootStateload = "...mapState(['$md5', '$base64', '$page', '$config', '$lodash', '$helper', '$i18n', '$moment'])";
+
 
 
 /**参数处理**/
@@ -21,7 +27,6 @@ let parseArgs = ()=>{
 };
 
 let mkdirsSync = dirname => {
-    console.log(dirname);
     if (fs.existsSync(dirname)) {
         return true;
     } else {
@@ -42,10 +47,20 @@ let createVueFile = () =>{
         /**创建vue文件**/
         if(moduleType === 'v') {
             if (!components[moduleName]) {
+
+                /**有目录先创建目录**/
+                let arr = moduleName.split('/');
+                if (arr.length > 1) {
+                    let pathArr = arr.slice(0, -1).join('/');
+                    mkdirsSync(path.join(config.build.componentsDirectory, pathArr));
+                }
+
                 /**读取文件，并替换文件内容**/
                 let buffer = fs.readFileSync(path.join(config.build.packingTemplatesPath, 'vue-template.vue'));
                 let content = String(buffer);
                 content = content.replace(/@entryname@/g, moduleName);
+                content = content.replace(/@rootStateLoad@/g, rootStateload);
+
 
                 /**写文件**/
                 let fd = fs.openSync(path.join(config.build.componentsDirectory, `${moduleName}.vue`), 'w');
@@ -57,6 +72,7 @@ let createVueFile = () =>{
             }
         }
 
+        /**创建子组件vue文件**/
         if(moduleType === 'sv'){
             if (!subComponents[moduleName]) {
 
@@ -71,6 +87,7 @@ let createVueFile = () =>{
                 let buffer = fs.readFileSync(path.join(config.build.packingTemplatesPath, 'sub-vue-template.vue'));
                 let content = String(buffer);
                 content = content.replace(/@entryname@/g, `sub-${moduleName.replace(/\//g,'-')}`);
+                content = content.replace(/@rootStateLoad@/g, rootStateload);
 
                 /**写文件**/
                 let fd = fs.openSync(path.join(config.build.subComponentsDirectory, `${moduleName}.vue`), 'w+');

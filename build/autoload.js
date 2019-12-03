@@ -5,6 +5,23 @@ const config = require('../config');
 const fs = require("fs");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+/**
+ * 递归创建目录
+ * @param dirname
+ * @returns {boolean}
+ */
+let mkdirsSync = dirname => {
+    if (fs.existsSync(dirname)) {
+        return true;
+    } else {
+        if (mkdirsSync(path.dirname(dirname))) {
+            fs.mkdirSync(dirname);
+            return true;
+        }
+    }
+}
+
+
 let autoload = {
 
     /**
@@ -72,6 +89,14 @@ import ${moduleName} from './${modulePath}';`;
 
             /**无Entry文件自动生产Entry入口文件**/
             if (!entry[componentEntry]) {
+
+                /**有目录先创建目录**/
+                let arr = componentEntry.split('/');
+                if (arr.length > 1) {
+                    let pathArr = arr.slice(0, -1).join('/');
+                    mkdirsSync(path.join(config.build.entryDirectory, pathArr));
+                }
+
                 /**读取文件，并替换文件内容**/
                 let buffer = fs.readFileSync(path.join(config.build.packingTemplatesPath, 'entry-js-template.js'));
                 let content = String(buffer);
@@ -89,6 +114,13 @@ import ${moduleName} from './${modulePath}';`;
 
             /**无Module文件自动生产Module入口文件**/
             if (!modules[componentEntry]) {
+                /**有目录先创建目录**/
+                let arr = componentEntry.split('/');
+                if (arr.length > 1) {
+                    let pathArr = arr.slice(0, -1).join('/');
+                    mkdirsSync(path.join(config.build.modulesDirectory, pathArr));
+                }
+
                 /**读取文件，并替换文件内容**/
                 let buffer = fs.readFileSync(path.join(config.build.packingTemplatesPath, 'module-js-template.js'));
                 let content = String(buffer);
@@ -192,12 +224,12 @@ import ${moduleName} from './${modulePath}';`;
             let str = '';
             if (count === 0) {
                 str = `import ${moduleName} from './${modulePath}';`;
-                initStr += `Vue.component('sub-${modulePath.replace(/\//g,'-')}',${moduleName});`;
+                initStr += `Vue.component('sub-${modulePath.toLocaleLowerCase().replace(/\//g,'-')}',${moduleName});`;
             } else {
                 str = `
 import ${moduleName} from './${modulePath}';`;
                 initStr += `
-Vue.component('sub-${modulePath.replace(/\//g, '-')}',${moduleName});`;
+Vue.component('sub-${modulePath.toLocaleLowerCase().replace(/\//g, '-')}',${moduleName});`;
             }
             importStr += str;
             count++;
@@ -217,8 +249,6 @@ Vue.component('sub-${modulePath.replace(/\//g, '-')}',${moduleName});`;
         fs.closeSync(fd);
         console.log('Sub Components autoload file updated or created \n');
     },
-
-
 
     /**
      * 自动从载入html 文件

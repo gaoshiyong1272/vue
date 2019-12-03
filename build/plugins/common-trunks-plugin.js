@@ -47,6 +47,7 @@ if(config.shouldOutputTwig()) {
 
 // create html or twig
 Object.keys(config.getEntries()).forEach((entry) => {
+    //cconsole.log(entry)
     let file = path.basename(entry.toLocaleLowerCase());
     let subPath = path.dirname(entry.toLocaleLowerCase());
     console.log(`Adding html plugin for ${entry.toLocaleLowerCase()}, file = ${file}, subPath= ${subPath}`);

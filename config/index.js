@@ -110,7 +110,7 @@ module.exports = {
         componentsFiles.forEach(componentFile => {
             componentFile = path.relative(this.build.componentsDirectory, componentFile);
             let result = (/(.*)\.vue$/).exec(componentFile);
-            if (result && componentFile.indexOf('/') === -1) {
+            if (result) {
                 let name = `${result[1]}`;
                 if (name === 'manifest' || name === 'vendor' || name === 'commons') {
                     throw new Error("entry named " + name + " uses a reserved name");

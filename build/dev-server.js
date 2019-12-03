@@ -55,7 +55,16 @@ let componentsFn = ()=>{
     console.log('创建文件完成开始');
     autoload.entrys();
     autoload.modules();
+    autoload.html();
     console.log('创建文件完成结束');
+
+    // webpackConfig = require('./webpack.hmr.conf');
+    // console.log(webpackConfig);
+    // let compiler = webpack(webpackConfig);
+    // compiler.run((err, stats)=>{
+    //     server.close();
+    //     app.listen(port);
+    // })
 };
 
 /**

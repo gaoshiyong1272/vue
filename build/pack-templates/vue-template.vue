@@ -22,7 +22,7 @@
             return {};
         },
         computed: {
-            ...mapState(['$md5','$base64','$page', '$config', '$lodash', '$helper','$i18n','$moment']),
+            @rootStateLoad@,
             ...mapState('@entryname@', ['demoList']),
             ...mapGetters('@entryname@', ['GET_DEMO_GETTER']),
         },
