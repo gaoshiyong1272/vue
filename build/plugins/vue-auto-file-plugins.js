@@ -8,6 +8,7 @@ const autoload = require('../autoload');
     autoload.helper();
     autoload.entrys();
     autoload.modules();
+    autoload.subComponents()
 })();
 
 module.exports = [];

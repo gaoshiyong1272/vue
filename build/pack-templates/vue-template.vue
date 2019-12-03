@@ -17,6 +17,7 @@
     export default {
         name       : '@entryname@',
         components : {},
+
         data(){
             return {};
         },

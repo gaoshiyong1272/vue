@@ -2,8 +2,13 @@
 
 import Vue from 'vue';
 import 'babel-polyfill';
+
+
 const PackageInfo = require('./package');
 const store = require('./' + PackageInfo.name + '/store/app');
+
+/**加载子组件文件夹**/
+require('./' + PackageInfo.name + '/subComponents/autoload');
 
 
 /**
@@ -18,6 +23,8 @@ Vue.use(ElementUI);
  */
 import VueClipboard from 'vue-clipboard2';
 Vue.use(VueClipboard);
+
+
 
 
 // noinspection JSUnresolvedVariable

@@ -3,6 +3,9 @@
         <div>Index</div>
         <a href="javascript:void(0)" @click="dataSave">data导出Excel</a>
         <a href="javascript:void(0)" @click="tableSave">table导出Excel</a>
+        <sub-index></sub-index>
+        <sub-list></sub-list>
+        <sub-list-index></sub-list-index>
         <table class="table" v-show="0">
             <tr>
                 <td>a</td>

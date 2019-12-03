@@ -47,6 +47,7 @@ const compilerDoneHanle = (stats) => {
     let entrys = lodash['keysIn'](config.getEntries());
     let components = lodash['keysIn'](config.getComponentsEntries());
 
+
     /**入口个数相同不处理**/
     if (entrys.length === components.length) {
         console.log('components无变化');
@@ -54,9 +55,10 @@ const compilerDoneHanle = (stats) => {
     }
 
     console.log('创建文件完成开始');
-    autoload.helper();
     autoload.entrys();
     autoload.modules();
+    autoload.helper();
+    autoload.subComponents();
     console.log('创建文件完成结束');
 
     //autoload.html();

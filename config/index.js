@@ -15,6 +15,7 @@ module.exports = {
         entryDirectory       : path.resolve(__dirname, '../' + packageInfo.name + '/entries'),
         packingTemplatesPath : path.resolve(__dirname, '../build/pack-templates'),
         componentsDirectory : path.resolve(__dirname, '../' + packageInfo.name + '/components'),
+        subComponentsDirectory: path.resolve(__dirname, '../' + packageInfo.name + '/subComponents'),
         helperDirectory: path.resolve(__dirname, '../' + packageInfo.name + '/helper'),
         modulesDirectory: path.resolve(__dirname, '../' + packageInfo.name + '/store/modules'),
 
@@ -39,7 +40,7 @@ module.exports = {
     dev              : {
         env             : require('./dev.env'),
         // index entry for debugging server
-        index           : 'index',
+        index           : 'demo',
         port            : 8090,
         autoOpenBrowser : true,
         proxyTable      : {},
@@ -114,7 +115,28 @@ module.exports = {
                 if (name === 'manifest' || name === 'vendor' || name === 'commons') {
                     throw new Error("entry named " + name + " uses a reserved name");
                 }
-                components[name] = path.join(this.build.entryDirectory, componentFile);
+                components[name] = path.join(this.build.componentsDirectory, componentFile);
+            }
+        });
+        return components;
+    },
+
+    /**
+     * 获取components目录文件
+     */
+    getSubComponentsEntries: function () {
+        let components = {};
+        let componentsFiles = rreaddir(this.build.subComponentsDirectory);
+        // noinspection JSUnresolvedFunction
+        componentsFiles.forEach(componentFile => {
+            componentFile = path.relative(this.build.subComponentsDirectory, componentFile);
+            let result = (/(.*)\.vue$/).exec(componentFile);
+            if (result) {
+                let name = `${result[1]}`;
+                if (name === 'manifest' || name === 'vendor' || name === 'commons') {
+                    throw new Error("entry named " + name + " uses a reserved name");
+                }
+                components[name] = path.join(this.build.subComponentsDirectory, componentFile);
             }
         });
         return components;

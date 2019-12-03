@@ -86,6 +86,7 @@ import ${moduleName} from './${modulePath}';`;
                 entryCount.push(componentEntry);
                 console.log('Entry created，Entry name => ', componentEntry)
             }
+
             /**无Module文件自动生产Module入口文件**/
             if (!modules[componentEntry]) {
                 /**读取文件，并替换文件内容**/
@@ -119,6 +120,7 @@ import ${moduleName} from './${modulePath}';`;
         let importStr = '';
         let exportStr = '';
         let count = 0;
+        let componentsEntries = config.getComponentsEntries();
         Object.keys(config.getStoreModules()).forEach((module) => {
             /**多层关系加载**/
             let moduleName = module;
@@ -133,21 +135,20 @@ import ${moduleName} from './${modulePath}';`;
                 }
                 moduleName = temp;
             }
-
             let str = '';
             if (count === 0) {
                 str = `import ${moduleName} from './${modulePath}';`;
                 exportStr += `${moduleName}`;
-            } else {
+            }
+            else
+            {
                 str = `
 import ${moduleName} from './${modulePath}';`;
                 exportStr += `,
     ${moduleName}`;
             }
-
             importStr += str;
             count++;
-
         });
 
         /**读取文件，并替换文件内容**/
@@ -162,6 +163,62 @@ import ${moduleName} from './${modulePath}';`;
         fs.closeSync(fd);
         console.log('Store modules autoload file updated or created \n');
     },
+
+    /**
+     * 自动加载Store Modules模块
+     */
+    subComponents: function () {
+        let importStr = '';
+        let initStr = '';
+        let count = 0;
+
+        //$vue.component('sub-@modules_name@', @modules_name@);
+        Object.keys(config.getSubComponentsEntries()).forEach((module) => {
+            /**多层关系加载**/
+            let moduleName = module;
+            let modulePath = module;
+
+            if (module.indexOf('/') !== -1) {
+                let temp = '';
+                let arr = module.split('/');
+                let len = arr.length;
+                for (let i = 0; i < len; i++) {
+                    if (i === 0) temp = arr[i];
+                    else temp += arr[i].replace(arr[i][0], arr[i][0].toLocaleUpperCase());
+                }
+                moduleName = temp;
+            }
+
+            let str = '';
+            if (count === 0) {
+                str = `import ${moduleName} from './${modulePath}';`;
+                initStr += `Vue.component('sub-${modulePath.replace(/\//g,'-')}',${moduleName});`;
+            } else {
+                str = `
+import ${moduleName} from './${modulePath}';`;
+                initStr += `
+Vue.component('sub-${modulePath.replace(/\//g, '-')}',${moduleName});`;
+            }
+            importStr += str;
+            count++;
+        });
+
+        //console.log(importStr, initStr);
+
+        /**读取文件，并替换文件内容**/
+        let buffer = fs.readFileSync(path.join(config.build.packingTemplatesPath, 'auto-load-sub-component-template.txt'));
+        let content = String(buffer);
+        content = content.replace(/@import_modules@/g, importStr);
+        content = content.replace(/@use_sub_components@/g, initStr);
+
+        /**写文件**/
+        let fd = fs.openSync(path.join(config.build.subComponentsDirectory, 'autoload.js'), 'w');
+        fs.writeFileSync(fd, content);
+        fs.closeSync(fd);
+        console.log('Sub Components autoload file updated or created \n');
+    },
+
+
 
     /**
      * 自动从载入html 文件
