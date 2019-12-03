@@ -47,9 +47,9 @@ if(config.shouldOutputTwig()) {
 
 // create html or twig
 Object.keys(config.getEntries()).forEach((entry) => {
-    let file = path.basename(entry);
-    let subPath = path.dirname(entry);
-    console.log(`Adding html plugin for ${entry}, file = ${file}, subPath= ${subPath}`);
+    let file = path.basename(entry.toLocaleLowerCase());
+    let subPath = path.dirname(entry.toLocaleLowerCase());
+    console.log(`Adding html plugin for ${entry.toLocaleLowerCase()}, file = ${file}, subPath= ${subPath}`);
 
     if (config.shouldOutputHtml()) {
         // noinspection JSUnresolvedVariable
@@ -59,7 +59,7 @@ Object.keys(config.getEntries()).forEach((entry) => {
             inject         : "body",
             chunks         : ['manifest', 'vendor', 'commons', entry],
             template       : path.join(config.build.packingTemplatesPath, 'debug.html'),
-            filename       : path.join(config.build.buildOutputRoot, `${entry}.html`),
+            filename       : path.join(config.build.buildOutputRoot, `${entry.toLocaleLowerCase()}.html`),
         }));
     }
 

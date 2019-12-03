@@ -49,6 +49,8 @@
             console.log(this.$page);
             console.log(this.$lodash['size']('aaaaaa'));
             console.log(this.$helper.helper.parseURL());
+
+            this.$helper.helper.getParamers()
         },
 
         methods: {

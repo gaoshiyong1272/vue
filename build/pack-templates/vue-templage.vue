@@ -1,11 +1,18 @@
 <template>
     <div id="@entryname@">
         <div>@entryname@</div>
+        <ul>
+            <li v-for="item in demoList">
+                <div v-html="`id: ${item.id}`"></div>
+                <div v-html="`data: ${item.data}`"></div>
+            </li>
+        </ul>
     </div>
 </template>
 
 <script>
     import {mapState, mapActions, mapMutations, mapGetters} from 'vuex';
+
 
     export default {
         name       : '@entryname@',
@@ -14,16 +21,31 @@
             return {};
         },
         computed: {
-            ...mapState(['$md5','$base64','$page', '$lodash', '$helper','$i18n','$moment']),
-            ...mapState('@entryname@', []),
-            ...mapGetters('@entryname@', []),
+            ...mapState(['$md5','$base64','$page', '$config', '$lodash', '$helper','$i18n','$moment']),
+            ...mapState('@entryname@', ['demoList']),
+            ...mapGetters('@entryname@', ['GET_DEMO_GETTER']),
         },
 
-        watch:{},
-        created() {},
+        watch:{
+            GET_DEMO_GETTER(val) {
+                if(val) {
+                    console.log(this.GET_DEMO_GETTER)
+                }
+            }
+        },
+        created() {
+            /**调用Actions方法**/
+            this.DEMO_ACTIONS({args:1});
+
+            /**调用Mutations方法**/
+            this.DEMO_MUTATIONS(true);
+
+
+        },
         mounted(){},
         methods: {
-            ...mapActions('@entryname@', []),
+            ...mapActions('@entryname@', ['DEMO_ACTIONS']),
+            ...mapMutations('@entryname@', ['DEMO_MUTATIONS'])
         }
     };
 </script>

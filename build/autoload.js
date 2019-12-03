@@ -3,6 +3,7 @@
 const path = require('path');
 const config = require('../config');
 const fs = require("fs");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let autoload = {
 
@@ -15,32 +16,33 @@ let autoload = {
         let count = 0;
         Object.keys(config.getHelpers()).forEach((helper) => {
             /**多层关系加载**/
-            let moduleName = helper;
-            let modulePath = helper;
-            if (helper.indexOf('/') !== -1) {
-                let temp = '';
-                let arr = helper.split('/');
-                let len = arr.length;
-                for (let i = 0; i < len; i++) {
-                    if (i === 0) temp = arr[i];
-                    else temp += arr[i].replace(arr[i][0], arr[i][0].toLocaleUpperCase());
+            if(helper.indexOf('bak') === -1 ) {
+                let moduleName = helper;
+                let modulePath = helper;
+                if (helper.indexOf('/') !== -1) {
+                    let temp = '';
+                    let arr = helper.split('/');
+                    let len = arr.length;
+                    for (let i = 0; i < len; i++) {
+                        if (i === 0) temp = arr[i];
+                        else temp += arr[i].replace(arr[i][0], arr[i][0].toLocaleUpperCase());
+                    }
+                    moduleName = temp;
                 }
-                moduleName = temp;
-            }
 
-            let str = '';
-            if (count === 0) {
-                str = `import ${moduleName} from './${modulePath}';`;
-                helperExportStr += `${moduleName}`;
-            } else {
-                str = `
+                let str = '';
+                if (count === 0) {
+                    str = `import ${moduleName} from './${modulePath}';`;
+                    helperExportStr += `${moduleName}`;
+                } else {
+                    str = `
 import ${moduleName} from './${modulePath}';`;
-                helperExportStr += `,
+                    helperExportStr += `,
     ${moduleName}`;
+                }
+                helperImportStr += str;
+                count++;
             }
-            helperImportStr += str;
-            count++;
-
         });
 
         /**读取文件，并替换文件内容**/
@@ -66,22 +68,23 @@ import ${moduleName} from './${modulePath}';`;
             let entry = config.getEntries();
             let modules = config.getStoreModules();
 
+            //console.log(entry, componentEntry,entry[componentEntry])
+
             /**无Entry文件自动生产Entry入口文件**/
             if (!entry[componentEntry]) {
                 /**读取文件，并替换文件内容**/
-                let componentName = componentEntry.toLocaleLowerCase();
                 let buffer = fs.readFileSync(path.join(config.build.packingTemplatesPath, 'entry-js-template.js'));
                 let content = String(buffer);
-                content = content.replace(/@entryname@/g, componentName);
+                content = content.replace(/@entryname@/g, componentEntry);
                 content = content.replace(/@pathname@/g, componentEntry);
 
 
                 /**写文件**/
-                let fd = fs.openSync(path.join(config.build.entryDirectory, `${componentName}.js`), 'w');
+                let fd = fs.openSync(path.join(config.build.entryDirectory, `${componentEntry}.js`), 'w');
                 fs.writeFileSync(fd, content);
                 fs.closeSync(fd);
-                entryCount.push(componentName);
-                console.log('Entry created，Entry name => ', componentName)
+                entryCount.push(componentEntry);
+                console.log('Entry created，Entry name => ', componentEntry)
             }
             /**无Module文件自动生产Module入口文件**/
             if (!modules[componentEntry]) {
@@ -158,8 +161,31 @@ import ${moduleName} from './${modulePath}';`;
         fs.writeFileSync(fd, content);
         fs.closeSync(fd);
         console.log('Store modules autoload file updated or created \n');
-    }
+    },
 
+    /**
+     * 自动从载入html 文件
+     */
+    html(){
+        // create html or twig
+        Object.keys(config.getEntries()).forEach((entry) => {
+            let file = path.basename(entry.toLocaleLowerCase());
+            let subPath = path.dirname(entry.toLocaleLowerCase());
+            console.log(`Adding html plugin for ${entry.toLocaleLowerCase()}, file = ${file}, subPath= ${subPath}`);
+
+            if (config.shouldOutputHtml()) {
+                // noinspection JSUnresolvedVariable
+                new HtmlWebpackPlugin({
+                    title: entry,
+                    chunksSortMode: 'manual',
+                    inject: "body",
+                    chunks: ['manifest', 'vendor', 'commons', entry],
+                    template: path.join(config.build.packingTemplatesPath, 'debug.html'),
+                    filename: path.join(config.build.buildOutputRoot, `${entry.toLocaleLowerCase()}.html`),
+                });
+            }
+        });
+    }
 };
 
 module.exports = autoload;

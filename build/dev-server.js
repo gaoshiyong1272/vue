@@ -39,29 +39,11 @@ let hotMiddleware = require('webpack-hot-middleware')(compiler, {
 });
 let proxyMiddleware = require('http-proxy-middleware');
 
-// force page reload when html-webpack-plugin template changes
-// noinspection JSDeprecatedSymbols
-compiler.plugin('compilation', function (compilation) {
-    compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-        // noinspection JSUnresolvedFunction
-        hotMiddleware.publish({action : 'reload'});
-        cb();
-        notifier.notify({
-            title: "提示",
-            message: '编译完成并自动刷新页面',
-            icon: ICON
-        });
-    });
-});
-
-
-
 /***
  * 编译完成处理,当entrys与components文件个数不一样，触发autoload逻辑
  * @param stats
  */
-
-const compilerDoneHanle = (stats)=> {
+const compilerDoneHanle = (stats) => {
     let entrys = lodash['keysIn'](config.getEntries());
     let components = lodash['keysIn'](config.getComponentsEntries());
 
@@ -77,35 +59,37 @@ const compilerDoneHanle = (stats)=> {
     autoload.modules();
     console.log('创建文件完成结束');
 
-    /**重载项目**/
-    let pat = `cd ${__dirname}`;
-    pat = pat.replace(/\//g, '//');
-    let cmd = `${pat} && cd ..// && npm run dev`;
-    console.log(cmd);
-    server.close();
+    //autoload.html();
+    //server.close();
+    //server = app.listen(port);
+    // webpackConfig.entry  = config.getEntries();
+    // let compiler = webpack(webpackConfig);
+    // let devMiddleware = require('webpack-dev-middleware')(compiler, {
+    //     publicPath: webpackConfig.output.publicPath,
+    //     quiet: true,
+    // });
 
-    exec(cmd, function (error, stdout, stderr) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('重启成功');
-        }
-    });
-
-    notifier.notify({
-        title: "提示",
-        message: '编译完成并重启服务',
-        icon: ICON
-    });
+    // notifier.notify({
+    //     title: "提示",
+    //     message: '编译完成并重启服务',
+    //     icon: ICON
+    // });
 };
 
-/**完成编译时触发该事件**/
 let doneTimeer = null;
-compiler.plugin('done', function (stats) {
+// force page reload when html-webpack-plugin template changes
+// noinspection JSDeprecatedSymbols
+compiler.plugin('compilation', function (compilation) {
     if (doneTimeer) clearTimeout(doneTimeer);
-    doneTimeer = setTimeout(()=>{
-        compilerDoneHanle(stats);
-    }, 2000);
+    doneTimeer = setTimeout(() => {
+         compilerDoneHanle(compilation);
+    }, 100);
+
+    compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
+        // noinspection JSUnresolvedFunction
+        hotMiddleware.publish({action: 'reload'});
+        cb();
+    });
 });
 
 
