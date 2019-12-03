@@ -2,7 +2,6 @@ let args = process.argv.splice(2);
 const path = require('path');
 const config = require('../config');
 const fs = require("fs");
-const autoloadSubvue = require('./autoload')
 
 
 
@@ -21,7 +20,7 @@ let parseArgs = ()=>{
     }
 };
 
-function mkdirsSync(dirname) {
+let mkdirsSync = dirname => {
     console.log(dirname);
     if (fs.existsSync(dirname)) {
         return true;
@@ -77,7 +76,6 @@ let createVueFile = () =>{
                 let fd = fs.openSync(path.join(config.build.subComponentsDirectory, `${moduleName}.vue`), 'w+');
                 fs.writeFileSync(fd, content);
                 fs.closeSync(fd);
-                autoloadSubvue.subComponents();
                 console.log('Created sub vue file is successfully ，sub vue name is => ', moduleName, '\n')
             }else{
                 console.log(moduleName + ' file already exist \n');

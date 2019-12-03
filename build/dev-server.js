@@ -39,14 +39,12 @@ let hotMiddleware = require('webpack-hot-middleware')(compiler, {
 });
 let proxyMiddleware = require('http-proxy-middleware');
 
-/***
- * 编译完成处理,当entrys与components文件个数不一样，触发autoload逻辑
- * @param stats
+/**
+ * 检查components变化
  */
-const compilerDoneHanle = (stats) => {
+let componentsFn = ()=>{
     let entrys = lodash['keysIn'](config.getEntries());
     let components = lodash['keysIn'](config.getComponentsEntries());
-
 
     /**入口个数相同不处理**/
     if (entrys.length === components.length) {
@@ -57,25 +55,51 @@ const compilerDoneHanle = (stats) => {
     console.log('创建文件完成开始');
     autoload.entrys();
     autoload.modules();
-    autoload.helper();
-    autoload.subComponents();
     console.log('创建文件完成结束');
+};
 
-    //autoload.html();
-    //server.close();
-    //server = app.listen(port);
-    // webpackConfig.entry  = config.getEntries();
-    // let compiler = webpack(webpackConfig);
-    // let devMiddleware = require('webpack-dev-middleware')(compiler, {
-    //     publicPath: webpackConfig.output.publicPath,
-    //     quiet: true,
-    // });
+/**
+ * 检查subComponents变化
+ * @type {{}}
+ */
+let subComponentsStatus = Object.assign({}, config.getSubComponentsEntries());
+let subComponentsFn = ()=>{
+    let oldComponents = lodash['keysIn'](subComponentsStatus);
+    let newComponents = lodash['keysIn'](config.getSubComponentsEntries());
 
-    // notifier.notify({
-    //     title: "提示",
-    //     message: '编译完成并重启服务',
-    //     icon: ICON
-    // });
+    if(oldComponents.length === newComponents.length) {
+        console.log('subComponents无变化');
+        return;
+    }
+    autoload.subComponents();
+    subComponentsStatus = Object.assign({}, config.getSubComponentsEntries());
+};
+
+
+/**
+ * 检查helper变化
+ * @type {{}}
+ */
+let helperStatus = Object.assign({},config.getHelpers());
+let helperFn = ()=>{
+    let oldComponents = lodash['keysIn'](helperStatus);
+    let newComponents = lodash['keysIn'](config.getHelpers());
+
+    if (oldComponents.length === newComponents.length) {
+        console.log('helper无变化');
+        return;
+    }
+    autoload.helper();
+    helperStatus = Object.assign({}, config.getHelpers());
+};
+
+/***
+ * 编译完成处理,当entrys与components文件个数不一样，触发autoload逻辑
+ */
+const compilerDoneHanle = () => {
+    subComponentsFn();
+    helperFn();
+    componentsFn();
 };
 
 let doneTimeer = null;
