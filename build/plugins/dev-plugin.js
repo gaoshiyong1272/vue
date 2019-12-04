@@ -17,7 +17,7 @@ module.exports = [
     new FriendlyErrorsPlugin({
         clearConsole : false,
         onErrors(severity, errors){
-            console.log('FriendlyErrorsPlugin event=>', severity, errors);
+            //console.log('FriendlyErrorsPlugin event=>', severity, errors);
         },
 
     })

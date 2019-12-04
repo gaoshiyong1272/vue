@@ -1,7 +1,7 @@
 import demo from './demo';
-import index from './index';
+import list from './list';
 
 export default {
     demo,
-    index
+    list
 }

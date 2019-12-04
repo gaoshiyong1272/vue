@@ -222,14 +222,19 @@ import ${moduleName} from './${modulePath}';`;
             }
 
             let str = '';
+            let componentstr = `Vue.component('sub-${modulePath.toLocaleLowerCase().replace(/\//g, '-')}',${moduleName});`;
+            if (moduleName === 'layout') {
+                componentstr = `Vue.component('${modulePath.toLocaleLowerCase().replace(/\//g, '-')}',${moduleName});`;
+            }
+
             if (count === 0) {
                 str = `import ${moduleName} from './${modulePath}';`;
-                initStr += `Vue.component('sub-${modulePath.toLocaleLowerCase().replace(/\//g,'-')}',${moduleName});`;
+                initStr += componentstr;
             } else {
                 str = `
 import ${moduleName} from './${modulePath}';`;
                 initStr += `
-Vue.component('sub-${modulePath.toLocaleLowerCase().replace(/\//g, '-')}',${moduleName});`;
+${componentstr}`;
             }
             importStr += str;
             count++;

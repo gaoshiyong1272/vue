@@ -1,13 +1,15 @@
 <template>
-    <div id="@entryname@">
-        <div>@entryname@</div>
-        <ul>
-            <li v-for="item in demoList">
-                <div v-html="`id: ${item.id}`"></div>
-                <div v-html="`data: ${item.data}`"></div>
-            </li>
-        </ul>
-    </div>
+    <layout>
+        <div id="@entryname@">
+            <div>content: @entryname@</div>
+            <ul>
+                <li v-for="item in demoList">
+                    <div v-html="`id: ${item.id}`"></div>
+                    <div v-html="`data: ${item.data}`"></div>
+                </li>
+            </ul>
+        </div>
+    </layout>
 </template>
 
 <script>
