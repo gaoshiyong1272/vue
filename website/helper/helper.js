@@ -1,6 +1,8 @@
 /**
  * Created by shiyonggao on 2019/11/28.
  */
+import {forIn, forEach, cloneDeep, keys, findKey, isEmpty, unescape, isPlainObject, isFunction, toString} from 'lodash';
+
 
 class Helper {
     /***
@@ -62,75 +64,42 @@ class Helper {
         };
     }
 
-
     /**
-     * 读取cookie值
-     * @param key
-     * @param options
+     * object to request params
+     * @param o
+     * @returns string   b=1&b=2
      */
-    getCookie(key, options) {
-        options = options || {};
-        let result, decode = options.raw ? function (s) {
-            return s;
-        } : decodeURIComponent;
-        return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? decode(result[1]) : null;
-    }
+    paramJSON(o){
+        let s = [],
+            add = (key, valueOrFunction) => {
+                let value = isFunction(valueOrFunction) ? valueOrFunction() : valueOrFunction;
+                s[s.length] = encodeURIComponent(key) + "=" + encodeURIComponent(value == null ? "" : value);
+            },
+            buildParams = (prefix, obj) => {
+                if (Array.isArray(obj)) {
+                    obj.forEach((value, i) => {
+                        buildParams(prefix + "[" + (typeof value === "object" && value != null ? i : "") + "]", value);
+                    });
+                } else if (isPlainObject(obj)) {
+                    forIn(obj, (value, key) => {
+                        buildParams(prefix + "[" + key + "]", value)
+                    });
+                } else {
+                    add(prefix, obj);
+                }
+            };
 
-    /**
-     * 删除指定键值所对应的cookie值
-     * @param key
-     * @param options
-     */
-    removeCookie(key, options) {
-        this.setCookie(key, null, options ? options : {});
-    }
-
-
-    /**
-     * 添加指定名称cookie值 , 过期时间小时制
-     * @param key
-     * @param value
-     * @param options
-     */
-    setCookie(key, value, options) {
-        options = lodash.extend({}, {
-            domain: '',
-            path: '/'
-        }, options);
-
-        //删除cookie操作处理
-        if (value === null) {
-            options.expires = -1;
+        if (isEmpty(o)) {
+            return "";
         }
 
-        //设置过期时间
-        if (typeof options.expires === 'number') {
-            let seconds = options.expires, t = options.expires = new Date();
-            t.setTime(t.getTime() + seconds * 1000 * 60 * 60);
-        }
+        forIn(o, (value, prefix) => {
+            buildParams(prefix, value);
+        });
 
-        //强制转换为字符串格式
-        value = '' + value;
-
-        //设置cookie信息
-        return (document.cookie = [
-            encodeURIComponent(key), '=',
-            options.raw ? value : encodeURIComponent(value),
-            options.expires ? '; expires=' + options.expires.toUTCString() : '',
-            options.path ? '; path=' + options.path : '',
-            options.domain ? '; domain=' + options.domain : '',
-            options.secure ? '; secure' : ''
-        ].join(''));
-
+        return s.join("&");
     }
 
-    /***
-     * 错误统一处理
-     * @param $vue
-     * @param res
-     */
-    error($vue, res) {
-    }
 
 }
 
