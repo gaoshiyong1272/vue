@@ -8,11 +8,12 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VueI18n from 'vue-i18n';
 import {Base64} from 'js-base64';
-import Config from "../config/config";
 import Lodash from "lodash";
 import Jquery from "jquery";
 import Helper from "../helper/autoload"
 import Moment from "moment";
+
+const Config = require('../config/config');
 
 
 

@@ -7,9 +7,13 @@
  */
 
 const config = {
-    /**
-     * api
-     */
+    /**dev server port**/
+    port: 8090,
+
+    /**dev server index page**/
+    index: 'demo',
+
+    /**api**/
     api: {},
 
     /**默认语言**/
@@ -21,7 +25,7 @@ const config = {
     version: 'v5.0.0',
 };
 
-export default config;
+module.exports =  config;
 
 
 

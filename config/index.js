@@ -6,6 +6,7 @@ const rreaddir = require('recursive-readdir-sync');
 const fs = require('fs-extra');
 
 let packageInfo = fs.readJsonSync(path.resolve(__dirname, '../package.json'));
+const objectConfig = require('../website/config/config');
 
 module.exports = {
     build            : {
@@ -40,8 +41,8 @@ module.exports = {
     dev              : {
         env             : require('./dev.env'),
         // index entry for debugging server
-        index           : 'demo',
-        port            : 8090,
+        index: objectConfig.index,
+        port: objectConfig.port,
         autoOpenBrowser : true,
         proxyTable      : {},
         // CSS Sourcemaps off by default because relative paths are "buggy"
