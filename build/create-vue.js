@@ -7,7 +7,7 @@ const fs = require("fs");
  * vue 加载root变量
  * @type {string}
  */
-let rootStateload = "...mapState(['$md5', '$base64', '$page', '$config', '$lodash', '$helper', '$i18n', '$moment'])";
+let rootStateload = "...mapState(['$md5', '$base64', '$page', '$config', '$lodash', '$helper', '$i18n', '$moment','$route'])";
 
 
 
@@ -47,26 +47,35 @@ let createVueFile = () =>{
         /**创建vue文件**/
         if(moduleType === 'v') {
             if (!components[moduleName]) {
-
+                let name = moduleName;
+                let pathModule = moduleName;
                 /**有目录先创建目录**/
                 let arr = moduleName.split('/');
                 if (arr.length > 1) {
                     let pathArr = arr.slice(0, -1).join('/');
                     mkdirsSync(path.join(config.build.componentsDirectory, pathArr));
+                    let temp = '';
+                    let arrs = moduleName.split('/');
+                    let len = arrs.length;
+                    for (let i = 0; i < len; i++) {
+                        if (i === 0) temp = arr[i];
+                        else temp += arrs[i].replace(arrs[i][0], arrs[i][0].toLocaleUpperCase());
+                    }
+                    pathModule = temp;
                 }
 
                 /**读取文件，并替换文件内容**/
                 let buffer = fs.readFileSync(path.join(config.build.packingTemplatesPath, 'vue-template.vue'));
                 let content = String(buffer);
-                content = content.replace(/@entryname@/g, moduleName);
+                content = content.replace(/@entryname@/g, pathModule);
                 content = content.replace(/@rootStateLoad@/g, rootStateload);
 
 
                 /**写文件**/
-                let fd = fs.openSync(path.join(config.build.componentsDirectory, `${moduleName}.vue`), 'w');
+                let fd = fs.openSync(path.join(config.build.componentsDirectory, `${name}.vue`), 'w');
                 fs.writeFileSync(fd, content);
                 fs.closeSync(fd);
-                console.log('Created vue file is successfully ，Vue name is => ', moduleName, '\n')
+                console.log('Created vue file is successfully ，Vue name is => ', name, '\n')
             }else{
                 console.log(moduleName + ' file already exist \n');
             }

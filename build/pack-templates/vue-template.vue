@@ -2,12 +2,6 @@
     <layout>
         <div id="@entryname@">
             <div>content: @entryname@</div>
-            <ul>
-                <li v-for="item in demoList">
-                    <div v-html="`id: ${item.id}`"></div>
-                    <div v-html="`data: ${item.data}`"></div>
-                </li>
-            </ul>
         </div>
     </layout>
 </template>
@@ -25,35 +19,21 @@
         },
         computed: {
             @rootStateLoad@,
-            ...mapState('@entryname@', ['demoList']),
-            ...mapGetters('@entryname@', ['GET_DEMO_GETTER']),
+            ...mapState('@entryname@', []),
+            ...mapGetters('@entryname@', []),
         },
 
-        watch:{
-            GET_DEMO_GETTER(val) {
-                if(val) {
-                    console.log(this.GET_DEMO_GETTER)
-                }
-            }
-        },
-        created() {
-            /**调用Actions方法**/
-            this.DEMO_ACTIONS({args:1});
-
-            /**调用Mutations方法**/
-            this.DEMO_MUTATIONS(true);
-
-
-        },
-        mounted(){},
+        watch:{},
+        created() {},
         methods: {
-            ...mapActions('@entryname@', ['DEMO_ACTIONS']),
-            ...mapMutations('@entryname@', ['DEMO_MUTATIONS'])
+            ...mapActions(['LOADING','SET_TITLE']),
+            ...mapActions('@entryname@', []),
+            ...mapMutations('@entryname@', [])
         }
     };
 </script>
 
-<style type="scss">
+<style type="scss" scoped>
     #@entryname@ {
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;

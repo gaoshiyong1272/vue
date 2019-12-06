@@ -43,7 +43,7 @@ module.exports = {
         // index entry for debugging server
         index: objectConfig.index,
         port: objectConfig.port,
-        autoOpenBrowser : true,
+        autoOpenBrowser : objectConfig.autoOpenBrowser === undefined?true :objectConfig.autoOpenBrowser,
         proxyTable      : {},
         // CSS Sourcemaps off by default because relative paths are "buggy"
         // with this option, according to the CSS-Loader README

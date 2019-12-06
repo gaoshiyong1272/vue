@@ -1,6 +1,6 @@
 import slimvue from 'slimvue';
-import App from 'website/components/@entryname@.vue';
-import store from "website/store/app";
+import App from '@websitedir/components/@entryname@.vue';
+import store from "@websitedir/store/app";
 
 store.commit('CHANGE_PAGE', '@pathname@');
 store.dispatch('APP_INIT',function(){

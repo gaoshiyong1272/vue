@@ -22,7 +22,7 @@ class cookie {
      * @param options
      */
     remove(key, options) {
-        this.setCookie(key, null, options ? options : {});
+        this.set(key, null, options ? options : {});
     }
 
 
@@ -33,7 +33,7 @@ class cookie {
      * @param options
      */
     set(key, value, options) {
-        options = lodash.extend({}, {
+        options = Object.assign({}, {
             domain: '',
             path: '/'
         }, options);

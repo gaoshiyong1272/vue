@@ -8,7 +8,7 @@ class test {
      * @param s
      * @returns {s}
      */
-    tirm(s) {
+    test(s) {
         return s.replace(/^\s+|\s+$/gm, '');
     }
 

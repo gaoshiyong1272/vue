@@ -2,6 +2,8 @@
  * Created by shiyonggao on 2019/11/28.
  */
 import {forIn, forEach, cloneDeep, keys, findKey, isEmpty, unescape, isPlainObject, isFunction, toString} from 'lodash';
+import Cookie from "./cookie";
+const Config = require('../config/config');
 
 
 class Helper {
@@ -12,6 +14,61 @@ class Helper {
      */
     tirm(s) {
         return s.replace(/^\s+|\s+$/gm, '');
+    }
+
+    logout(){
+        let coreUrl = Config.coreUrl;
+        let appId = Config.coreAppId;
+        let oauthUrl = Config.coreOauthUrl;
+        let redirectUrl = `${oauthUrl}/oauth/authorize?response_type=code&client_id=${appId}`;
+        window.location.href = `${coreUrl}/panel/logout?redirect_uri=${encodeURIComponent(redirectUrl)}`;;
+    }
+
+    /**
+     * 获取游戏code
+     * @returns {{gameCode: string}}
+     */
+    getGameCode(){
+        return {'game_code' :this.getParamers('game_code')};
+    }
+
+    /**
+     * 获取用户token，无用户token直接去登陆
+     * @returns {null}
+     */
+    getToken() {
+        let token = Cookie.get(Config.userLoginAccessTokenKey);
+        console.log('getToken',token);
+
+        /**无用户登陆跳转到登陆页面**/
+        if(!token && 0){
+            this.logout();
+        }
+        return token;
+    }
+
+    /**
+     * 路由跳转
+     * @param routeName
+     * @param data
+     * @param blank
+     */
+    route(routeName , data, blank = false){
+        let code = this.getGameCode();
+        let params = this.paramJSON(data);
+        let reg = /^((http|https):\/\/)\S+(\.html)$/;
+        let url = '';
+        if(reg.test(routeName)) {
+            url = `${routeName}?${params}`;
+        }else{
+            url = `${config.baseUrl}${routeName}.html?${params}`;
+        }
+        if(blank) {
+            window.open(url) ;
+        }else {
+            window.location.href = url;
+        }
+
     }
 
     /**

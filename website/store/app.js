@@ -2,6 +2,7 @@
  * Created by shiyonggao on 2019/1/28.
  */
 
+
 const MD5 = require('md5.js');
 
 import Vue from 'vue';
@@ -12,13 +13,11 @@ import Lodash from "lodash";
 import Jquery from "jquery";
 import Helper from "../helper/autoload"
 import Moment from "moment";
-
+import routerMaps from "../config/router";
 const Config = require('../config/config');
 
 
-
 /**root vuex**/
-
 import rootActions from './actions';
 import rootMutations from './mutations';
 import rootGetters from './actions';
@@ -44,6 +43,11 @@ const md5Fn = (str, hex = 'hex') => {
     return new MD5()['update'](str)['digest'](hex);
 };
 
+/**转换路由器方法**/
+const routeFn = (routeName, data, blank = false)=>{
+    Helper.helper.route(routeName, data, blank);
+};
+
 
 const state = {
     $i18n: i18n,
@@ -54,7 +58,13 @@ const state = {
     $lodash: Lodash,
     $jquery: Jquery,
     $helper : Helper,
-    $moment : Moment
+    $moment : Moment,
+    $loading: true,
+    $vue: null,
+    $s_title : 'ODP4发行平台',
+    $title: 'ODP4发行平台 欢迎您！',
+    $route: routeFn,
+    $routerMaps: routerMaps
 };
 
 
