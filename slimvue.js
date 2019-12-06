@@ -15,7 +15,7 @@ require('./' + PackageInfo.name + '/subComponents/autoload');
  * 加载ElementUI插件
  */
 import ElementUI from 'element-ui';
-import './theme-oasis-blue/index.css';
+import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
 /**

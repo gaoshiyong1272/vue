@@ -1,9 +1,14 @@
 <template>
     <layout>
-        <div id="slimvue">
-            <div>content: Index</div>
-            <a href="javascript:void(0)" @click="dataSave">data导出Excel</a>
-            <a href="javascript:void(0)" @click="tableSave">table导出Excel</a>
+        <div id="demo">
+            <div class="demo-btn">
+                <a href="javascript:void(0)" @click="dataSave">data导出Excel</a>
+                <a href="javascript:void(0)" @click="tableSave">table导出Excel</a>
+                <a href="javascript:void(0)" @click="showLoading">显示/隐藏LOADING</a>
+                <a href="javascript:void(0)" @click="urlJump(false)">Route 当前页面打开</a>
+                <a href="javascript:void(0)" @click="urlJump(true)">Route 新页面打开</a>
+            </div>
+
             <table class="table" v-show="0">
                 <tr>
                     <td>a</td>
@@ -35,12 +40,18 @@
 
 <script>
     import {mapState, mapActions, mapMutations, mapGetters} from 'vuex';
+    import Axios from 'axios';
 
     export default {
         name       : 'app',
         components : {},
+        data(){
+            return {
+                showLoad: false,
+            }
+        },
         computed: {
-            ...mapState(['$md5','$base64','$page', '$lodash', '$helper']),
+            ...mapState(['$md5','$base64','$page', '$lodash', '$helper','$route']),
             ...mapGetters('userInfo', [])
         },
 
@@ -51,11 +62,62 @@
             console.log(this.$page);
             console.log(this.$lodash['size']('aaaaaa'));
             console.log(this.$helper.helper.parseURL());
+            this.$helper.helper.getParamers();
+            this.SET_TITLE('功能演示页面');
 
-            this.$helper.helper.getParamers()
+            this.$helper.cookie.set(
+                'access-token',
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb3JlLm9hc2dhbWVzLmNvbSIsImlhdCI6MTU3NTU5NzQwNSwiZXhwIjoxNTc1NjQwNjAzLCJ1aWQiOjI1MywiYXBwaWQiOjI1MSwiZGVsZWdhdGUiOiIyNTUiLCJyb2xlcyI6WyJST0xFX0NPUkVfVVNFUiIsIlJPTEVfQ09SRV9ERUxFR0FURURfVVNFUiJdLCJpcCI6IiIsImNoZWNrc3VtIjoiN2YyOWQ3ZGEzNWMxNjM2OSIsInBhcmFtcyI6eyJpc19hZG1pbiI6IjEiLCJpc19wYW5lbF9hZG1pbl91c2VyIjoiMSJ9fQ.X-fxPBUM1vcOEPuTlT8w3oMIUcOkHia9yk8UMjNBjRs',
+                {expires: 24*365}
+            )
+
+            // let options = [
+            //     {url: 'static/login.json', data: {param1: 'param1'}, method: 'get'},
+            //     {url: 'static/userinfo.json', data: {param2: 'param2'}, method: 'get'}
+            // ];
+            // this.$helper.request.all(options,(data)=>{
+            //     console.log('111111', data);
+            // },(res)=>{
+            //
+            // })
+
+            this.$helper.request.get('http://panel-udp-test.oasgames.com/v5/games/mtester/servers',{game_code: 'lotr'}).then((res)=>{
+                console.log(res);
+            }).catch((res)=>{
+                console.log(res);
+            })
+
+            // Axios.get('http://panel-udp-test.oasgames.com/v5/games/mtester/servers', {
+            //     params: {game_code: 'lotr'},
+            //     headers: {'X-Requested-With': 'XMLHttpRequest', 'game-code': 'lotr'},
+            //     // withCredentials: true,
+            //     // crossDomain: true
+            //
+            // }).then((res) => {
+            //     console.log(res);
+            // }).catch((res) => {
+            //     console.log(res);
+            // })
+
         },
 
         methods: {
+            ...mapActions(['LOADING', 'SET_TITLE']),
+
+            urlJump(blank){
+                /**
+                 * 默认
+                 * blank=true 新页面打开
+                 * blank=false 当前页面打开
+                 **/
+                this.$route('list/index', {id: 1, name: 'gaoshiyong'}, blank);
+            },
+
+            showLoading(){
+                this.showLoad = !this.showLoad;
+                console.log(this.showLoad);
+                this.LOADING(this.showLoad);
+            },
 
             /**
              * xlsx data 导出
@@ -96,17 +158,15 @@
 </script>
 
 <style type="scss">
-    #slimvue {
-        font-family             : 'Avenir', Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing  : antialiased;
-        -moz-osx-font-smoothing : grayscale;
-        text-align              : center;
-        color                   : #2C3E50;
-        margin-top              : 60px;
-
+    #demo {
+        height: 1800px;
     }
+    a {
 
-    .test {
-        background-image : url("~assets/logo.png");
+        position: relative;
+        z-index: 10001;
+        color: #00a9e1;
+        display: inline-block;
+        padding: 0 10px;
     }
 </style>

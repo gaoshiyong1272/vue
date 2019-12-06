@@ -55,6 +55,7 @@ Object.keys(config.getEntries()).forEach((entry) => {
     if (config.shouldOutputHtml()) {
         // noinspection JSUnresolvedVariable
         plugins.push(new HtmlWebpackPlugin({
+            version        : parseInt((new Date().getTime()) / 1000),
             title          : entry,
             chunksSortMode : 'manual',
             inject         : "body",

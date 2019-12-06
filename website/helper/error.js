@@ -6,11 +6,9 @@ class error {
 
     /***
      * 错误统一处理
-     * @param $vue
-     * @param res
      */
-    error($vue, res) {
-
+    error(e, {state, commit, dispatch, rootState}) {
+        alert('error');
     }
 
 }

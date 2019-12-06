@@ -2,9 +2,24 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Slim Vue Debug Page</title>
+    <title>ODP4发行平台 欢迎您！</title>
+    <link rel="stylesheet" href="/static/style/common.css?version=<%= htmlWebpackPlugin.options.version %>">
 </head>
 <body>
+<!--加载全局loading模块-->
+<div class="loading" id="loading" style="display: block">
+    <div class="loading-wrap"></div>
+    <div class="loading-animate"></div>
+</div>
+<!--加载全局loading模块 结束-->
+
+<!--加载全局loading模块-->
+<div class="fullsreen-loading" id="fullsreen-loading" style="display: none">
+    <div class="fullsreen-loading-wrap"></div>
+    <div class="fullsreen-loading-animate"></div>
+</div>
+<!--加载全局loading模块 结束-->
+
 <div id="slimvue"></div>
 <!-- built files will be auto injected -->
 </body>
