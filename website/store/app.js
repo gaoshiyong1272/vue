@@ -64,7 +64,10 @@ const state = {
     $s_title : 'ODP4发行平台',
     $title: 'ODP4发行平台 欢迎您！',
     $route: routeFn,
-    $routerMaps: routerMaps
+    $routerMaps: routerMaps,
+    $contentHeight: 400,
+    $iframeHeight : 400,
+    $loadingPrivate: false
 };
 
 

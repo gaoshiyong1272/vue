@@ -1,6 +1,6 @@
 <template>
-    <layout>
-        <div id="demo">
+    <layout :padding="0">
+        <div style="display: none" id="demo">
             <div class="demo-btn">
                 <a href="javascript:void(0)" @click="dataSave">data导出Excel</a>
                 <a href="javascript:void(0)" @click="tableSave">table导出Excel</a>
@@ -35,6 +35,7 @@
                 </tr>
             </table>
         </div>
+        <iframe src="https://www.baidu.com" :height="$iframeHeight" frameborder="0" width="100%"></iframe>
     </layout>
 </template>
 
@@ -51,7 +52,7 @@
             }
         },
         computed: {
-            ...mapState(['$md5','$base64','$page', '$lodash', '$helper','$route']),
+            ...mapState(['$md5','$base64','$page', '$lodash', '$helper','$route', '$iframeHeight']),
             ...mapGetters('userInfo', [])
         },
 
@@ -62,8 +63,10 @@
             console.log(this.$page);
             console.log(this.$lodash['size']('aaaaaa'));
             console.log(this.$helper.helper.parseURL());
-            this.$helper.helper.getParamers();
-            this.SET_TITLE('功能演示页面');
+
+            //this.PRIVATE_LOADING(true)
+
+
 
             this.$helper.cookie.set(
                 'access-token',
@@ -103,6 +106,7 @@
 
         methods: {
             ...mapActions(['LOADING', 'SET_TITLE']),
+            ...mapMutations(['PRIVATE_LOADING']),
 
             urlJump(blank){
                 /**
