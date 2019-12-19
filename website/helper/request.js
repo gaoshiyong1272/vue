@@ -4,16 +4,12 @@ const Config = require('../config/config');
 
 class request {
     constructor(){
-        this.token = Helper.getToken();
-        let headers = {};
-        if(this.token) {
-            headers[Config.userLoginAccessTokenKey] = this.token;
-        }
+        this.data = {};
+        this.headers = {};
         this.axios = Axios.create({
             timeout: 120 * 60,
             responseType: 'json',
             baseURL: Config.apiBaseUrl,
-            headers: headers
         });
     }
 
@@ -46,15 +42,47 @@ class request {
      * @returns {AxiosPromise}
      */
     get(url, data = {} , header = {}) {
-        let token = {};
-        data = Object.assign(Helper.getGameCode(),data);
         return this.axios({
             url : url,
             method: 'get',
-            params: data,
-            withCredentials : false
+            params: Object.assign({}, this.data, data),
+            headers : Object.assign({},this.headers, header)
         })
     }
+
+    /**
+     * ajax put request
+     * @param url
+     * @param data
+     * @param header
+     * @returns {AxiosPromise}
+     */
+    put(url, data = {}, header = {}) {
+        return this.axios({
+            url: url,
+            method: 'put',
+            data: Object.assign({}, this.data, data),
+            headers : Object.assign({}, this.headers, header)
+        })
+    }
+
+    /**
+     * ajax delete request
+     * @param url
+     * @param data
+     * @param header
+     * @returns {AxiosPromise}
+     */
+    delete(url, data = {}, header = {}) {
+        return this.axios({
+            url: url,
+            method: 'delete',
+            data: Object.assign({}, this.data, data),
+            headers: Object.assign({}, this.headers, header)
+        })
+    }
+
+
 
     /**
      * ajax post request
@@ -65,8 +93,8 @@ class request {
      * @returns {AxiosPromise}
      */
     post(url, data = {}, header = {} , isFormData = false){
-        let token = {};
-        data = Object.assign(Helper.getGameCode(), data);
+        data = Object.assign({}, this.data, data);
+        header = Object.assign({}, this.headers, header);
 
         /**使用FormData格式**/
         if(isFormData) {
@@ -104,6 +132,28 @@ class request {
             errorCallback(res);
         });
     }
-};
+
+
+    /**
+     * ajax post request data use FormData
+     * @param url
+     * @param data
+     * @param header
+     * @returns {AxiosPromise}
+     */
+    formDataPost(url, data = {}, header) {
+        let params = new FormData();
+        for (let key in data) {
+            params.append(key, data[key]);
+        }
+        params = new URLSearchParams(params);
+        return this.axios({
+            url: url,
+            method: 'post',
+            data: params,
+            headers : header
+        })
+    }
+}
 
 export default new request();
