@@ -11,17 +11,17 @@ import VueI18n from 'vue-i18n';
 import {Base64} from 'js-base64';
 import Lodash from "lodash";
 import Jquery from "jquery";
-import Helper from "../helper/autoload"
+import Helper from "@helper/autoload"
 import Moment from "moment";
-import routerMaps from "../config/router";
-const Config = require('../config/config');
+import routerMaps from "@config/router";
+const Config = require('@config/config');
 
 
 /**root vuex**/
 import rootActions from './actions';
 import rootMutations from './mutations';
 import rootGetters from './actions';
-import modules from './modules/autoload';
+import modules from '@modules/autoload';
 
 const locale = 'zh-CN';
 
@@ -30,7 +30,7 @@ Vue.use(VueI18n);
 
 const i18n = new VueI18n({
     locale: locale,
-    messages: require('../language/lang_config')
+    messages: require('@language/lang_config')
 });
 
 /**

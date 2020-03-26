@@ -13,7 +13,11 @@ let projectName = fs.readJsonSync(resolve('package.json')).name;
 let alias = {
     'vue$'     : 'vue/dist/vue.esm.js',
     'slimvue$' : resolve('slimvue.js'),
-    "@websitedir": resolve('website')
+    "@websitedir": resolve('website'),
+    "@config" : resolve('website/config'),
+    "@helper": resolve('website/helper'),
+    "@language": resolve('website/language'),
+    "@modules" : resolve('website/store/modules')
 };
 
 let includedDir = resolve('build/resolve-deps');
