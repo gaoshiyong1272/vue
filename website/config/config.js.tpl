@@ -8,12 +8,12 @@
 
 const config = {
     /**用户登陆token**/
-    userLoginAccessTokenKey: 'odp_access_token',
+    userLoginAccessTokenKey: 'access-token',
 
     /**core配置**/
     coreAppId: 255,
-    coreUrl : 'https://core-test.oasisgames.cn',
-    coreOauthUrl: 'https://oauth-test.oasisgames.cn',
+    coreUrl : '',
+    coreOauthUrl: '',
 
     /**dev server port**/
     port: 8090,
