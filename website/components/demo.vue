@@ -36,6 +36,10 @@
             </table>
         </div>
         <iframe src="https://www.baidu.com" :height="$iframeHeight" frameborder="0" width="100%"></iframe>
+<!--        <div style="width: 500px; padding: 50px 0; margin: 0 auto">-->
+<!--            <el-input class="testClass" type="number" v-model="munber" placeholder="输入金额"></el-input>-->
+<!--            <div class="testClass" ref="testdom"><strong>RMB:</strong><span v-html="munbertoUpperCase"></span></div>-->
+<!--        </div>-->
     </layout>
 </template>
 
@@ -49,14 +53,21 @@
         data(){
             return {
                 showLoad: false,
+                munber: ''
             }
         },
         computed: {
             ...mapState(['$md5','$base64','$page', '$lodash', '$helper','$route', '$iframeHeight']),
-            ...mapGetters('userInfo', [])
+            ...mapGetters('userInfo', []),
+
+			munbertoUpperCase(){
+            	return this.munbertoUpperCaseHandle(this.munber);
+            },
         },
 
         created() {
+			console.log(this.$refs.testdom);
+			console.log(document.getElementsByClassName('testClass'));
             console.log(this.$md5('qqqqqqqqq'));
             console.log(this.$md5('42'));
             console.log(this.$base64.encode('dankogai'));
@@ -68,11 +79,11 @@
 
 
 
-            this.$helper.cookie.set(
-                'access-token',
-                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb3JlLm9hc2dhbWVzLmNvbSIsImlhdCI6MTU3NTU5NzQwNSwiZXhwIjoxNTc1NjQwNjAzLCJ1aWQiOjI1MywiYXBwaWQiOjI1MSwiZGVsZWdhdGUiOiIyNTUiLCJyb2xlcyI6WyJST0xFX0NPUkVfVVNFUiIsIlJPTEVfQ09SRV9ERUxFR0FURURfVVNFUiJdLCJpcCI6IiIsImNoZWNrc3VtIjoiN2YyOWQ3ZGEzNWMxNjM2OSIsInBhcmFtcyI6eyJpc19hZG1pbiI6IjEiLCJpc19wYW5lbF9hZG1pbl91c2VyIjoiMSJ9fQ.X-fxPBUM1vcOEPuTlT8w3oMIUcOkHia9yk8UMjNBjRs',
-                {expires: 24*365}
-            )
+            // this.$helper.cookie.set(
+            //     'access-token',
+            //     'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb3JlLm9hc2dhbWVzLmNvbSIsImlhdCI6MTU3NTU5NzQwNSwiZXhwIjoxNTc1NjQwNjAzLCJ1aWQiOjI1MywiYXBwaWQiOjI1MSwiZGVsZWdhdGUiOiIyNTUiLCJyb2xlcyI6WyJST0xFX0NPUkVfVVNFUiIsIlJPTEVfQ09SRV9ERUxFR0FURURfVVNFUiJdLCJpcCI6IiIsImNoZWNrc3VtIjoiN2YyOWQ3ZGEzNWMxNjM2OSIsInBhcmFtcyI6eyJpc19hZG1pbiI6IjEiLCJpc19wYW5lbF9hZG1pbl91c2VyIjoiMSJ9fQ.X-fxPBUM1vcOEPuTlT8w3oMIUcOkHia9yk8UMjNBjRs',
+            //     {expires: 24*365}
+            // )
 
             // let options = [
             //     {url: 'static/login.json', data: {param1: 'param1'}, method: 'get'},
@@ -107,6 +118,46 @@
         methods: {
             ...mapActions(['LOADING', 'SET_TITLE']),
             ...mapMutations(['PRIVATE_LOADING']),
+
+			munbertoUpperCaseHandle(str){
+            	let retunErrorStr = '输入的金额格式有无！';
+				let regz = /^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$/;
+				let regs = /^[0]{1,}[0-9]{1,}$/;
+				if(!str) {
+					return '';
+                }
+                
+                if(str=== '.') {
+                	return retunErrorStr;
+                }
+
+				if (!(regz.test(str))) {
+					return retunErrorStr;
+				}
+				
+				if(regs.test(str)){
+					return retunErrorStr;
+                }
+				
+                let num = parseFloat(str);
+				let strOutput = "",
+                    strUnit = '仟佰拾亿仟佰拾万仟佰拾元角分';
+                num += "00";
+				let intPos = num.indexOf('.');
+                if (intPos >= 0) {
+                    num = num.substring(0, intPos) + num.substr(intPos + 1, 2);
+                }
+                strUnit = strUnit.substr(strUnit.length - num.length);
+                for (let i = 0; i < num.length; i++) {
+                    strOutput += '零壹贰叁肆伍陆柒捌玖'.substr(num.substr(i, 1), 1) + strUnit.substr(i, 1);
+                }
+                let newStr = strOutput.replace(/零角零分$/, '整').replace(/零[仟佰拾]/g, '零').replace(/零{2,}/g, '零').replace(/零([亿|万])/g, '$1').replace(/零+元/, '元').replace(/亿零{0,3}万/, '亿').replace(/^元/, "零元")
+                let reg = /^.{1,}(零分)$/;
+                if(reg.test(newStr)) {
+					newStr = newStr.replace(/零分/, '');
+                }
+                return newStr;
+            },
 
             urlJump(blank){
                 /**

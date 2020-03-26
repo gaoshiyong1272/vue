@@ -61,7 +61,7 @@ class Helper {
         if(reg.test(routeName)) {
             url = `${routeName}?${params}`;
         }else{
-            url = `${config.baseUrl}${routeName}.html?${params}`;
+            url = `${Config.baseUrl}${routeName}.html?${params}`;
         }
         if(blank) {
             window.open(url) ;

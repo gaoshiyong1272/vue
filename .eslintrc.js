@@ -19,7 +19,6 @@ module.exports = {
     'rules'       : {
         'semi'                        : [2, "always", {"omitLastInOneLineBlock" : false}],
         'comma-dangle'                : [2, 'only-multiline'],
-        // allow paren-less arrow functions
         'arrow-parens'                : 0,
         // allow async-await
         'generator-star-spacing'      : 0,
