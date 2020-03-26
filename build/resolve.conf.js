@@ -14,10 +14,10 @@ let alias = {
     'vue$'     : 'vue/dist/vue.esm.js',
     'slimvue$' : resolve('slimvue.js'),
     "@websitedir": resolve('website'),
-    "@config" : resolve('website/config'),
-    "@helper": resolve('website/helper'),
-    "@language": resolve('website/language'),
-    "@modules" : resolve('website/store/modules')
+    "@configdir" : resolve('website/config'),
+    "@helperdir": resolve('website/helper'),
+    "@languagedir": resolve('website/language'),
+    "@modulesdir" : resolve('website/store/modules')
 };
 
 let includedDir = resolve('build/resolve-deps');
