@@ -5,7 +5,7 @@ const rread = require('recursive-readdir-sync');
 const fs = require('fs-extra');
 
 function resolve(dir) {
-    return path.join(__dirname, '..', dir);
+    return path.join(__dirname, '../', dir);
 }
 
 let projectName = fs.readJsonSync(resolve('package.json')).name;
