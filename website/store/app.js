@@ -14,14 +14,14 @@ import Jquery from "jquery";
 import Helper from "@websitedir/helper/autoload"
 import Moment from "moment";
 import routerMaps from "@websitedir/config/router";
-const Config = require('@websitedir/config');
+const Config = require('@websitedir/config/config');
 
 
 /**root vuex**/
 import rootActions from './actions';
 import rootMutations from './mutations';
 import rootGetters from './actions';
-import modules from '@modulesdir/store/modules/autoload';
+import modules from '@websitedir/store/modules/autoload';
 
 const locale = 'zh-CN';
 
