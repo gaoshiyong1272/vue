@@ -1,8 +1,6 @@
 /**
  * Created by shiyonggao on 2019/1/28.
  */
-
-
 const MD5 = require('md5.js');
 
 import Vue from 'vue';
