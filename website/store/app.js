@@ -65,7 +65,8 @@ const state = {
     $routerMaps: routerMaps,
     $contentHeight: 400,
     $iframeHeight : 400,
-    $loadingPrivate: false
+    $loadingPrivate: false,
+    $pageWidth: 1180
 };
 
 

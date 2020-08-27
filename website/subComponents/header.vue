@@ -1,36 +1,19 @@
 <template>
     <div class="sub-header-box">
-        <div class="sub-header-left">
-            <div class="sub-header-select-box">
-                <el-select v-model="value" class="sub-header-select">
-                    <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                    </el-option>
-                </el-select>
-            </div>
-            <div class="sub-header-project-type">
-                <a class="active" href="">发行配置</a>
-                <a href="">业务管理</a>
+        <div class="sub-header-bar">
+            <div class="sub-header-bar-warpper" :style="`width:${$pageWidth}px` ">
+                <div class="sub-header-login-and-reg" v-if="!login">欢迎来到鞍山科技大市场，请 <a href="javascript:void(0)" @click="openLogin">登录</a> | <a
+                    @click="openReg" href="javascript:void(0)">注册</a></div>
+                <div class="sub-header-logined" v-else>欢迎来到鞍山科技大市场，<span>gaoshiyong</span></div>
+                <div class="sub-header-right">
+                    <a href="javascript:void(0)">帮助中心</a>|
+                    <a href="javascript:void(0)">联系我们</a>
+                </div>
             </div>
         </div>
-        <div class="sub-header-right">
-            <div class="sub-header-username">gaoshiyong@oasgames.com</div>
-            <div class="sub-header-setting">
-                <el-menu
-                    :default-active="activeIndex2"
-                    mode="horizontal"
-                    @select="subMenuSelected"
-                    class="el-menu-demo">
-                    <el-submenu index="1" popper-class="sub-header-setting-pop">
-                        <template slot="title"><i class="el-icon-setting"></i></template>
-                        <el-menu-item index="system/sdk">SDK版本管理</el-menu-item>
-                    </el-submenu>
-                </el-menu>
-            </div>
-            <div class="sub-header-logout" @click="$helper.helper.logout()"><i class="el-icon-switch-button"></i></div>
+        <div class="sub-header-logo" :style="`width:${$pageWidth}px` ">
+            <div class="sub-header-logo-left">logo</div>
+            <div class="sub-header-logo-right">搜索</div>
         </div>
     </div>
 </template>
@@ -42,52 +25,56 @@ export default {
     name: "sub-header",
     data() {
         return {
-            options: [{
-                value: '选项1',
-                label: '黄金糕'
-            }, {
-                value: '选项2',
-                label: '双皮奶'
-            }, {
-                value: '选项3',
-                label: '蚵仔煎'
-            }, {
-                value: '选项4',
-                label: '龙须面'
-            }, {
-                value: '选项5',
-                label: '北京烤鸭'
-            }],
-            value: '',
-            tabPosition: 'left',
-            activeIndex: '1',
-            activeIndex2: '1'
+        	login: false
         }
     },
     computed: {
-        ...mapState(['$md5', '$base64', '$page', '$lodash', '$helper', '$route']),
+        ...mapState(['$pageWidth']),
     },
     methods: {
         ...mapActions(['LOADING', 'SAVE_VUE_OBJECT','LOGOUT']),
 
-        subMenuSelected(key, keyPath){
-            this.$route(keyPath)
-        }
+        openLogin(){
+        	alert('用户登录')
+        },
+
+        openReg() {
+            alert('用户注册')
+        },
     }
 }
 </script>
 
 <style scoped type="scss">
     .sub-header-box {
+        width: 100%;
+    }
+    
+    .sub-header-bar {
+        height: 31px;
+        line-height: 31px;
+        background: #fafafa;
+        overflow: hidden;
+    }
+
+    .sub-header-bar-warpper {
+        margin: 0 auto;
+        height: 100%;
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         flex-wrap: wrap;
         align-items: center;
-        background: rgba(22, 155, 213, 1);
-        /*background: rgba(50,51,50, 1);*/
-        height: 60px;
-        padding: 0 20px;
     }
+    
+    .sub-header-logined span {
+        color: #2d64b3;
+    }
+
+    .sub-header-logo {
+        height: 158px;
+        margin: 0 auto;
+    }
+    
 
     .sub-header-select {
         width: 220px;

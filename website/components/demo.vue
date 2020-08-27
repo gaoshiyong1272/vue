@@ -1,5 +1,5 @@
 <template>
-    <layout :padding="0">
+    <layout :padding="0" :friendly="true">
         <div style="display: none" id="demo">
             <div class="demo-btn">
                 <a href="javascript:void(0)" @click="dataSave">data导出Excel</a>
