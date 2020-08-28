@@ -1,9 +1,15 @@
 <template>
   <div class="dev-container">
     <sub-header></sub-header>
-    <sub-menu></sub-menu>
+    <sub-menu v-if="!menutype"></sub-menu>
     <div class="sub-content-box">
-      <div class="sub-content" :style="`min-height: ${$contentHeight}px;`">
+      <div class="sub-content" :style="`min-height: ${$contentHeight}px; width:${$pageWidth}px`">
+        <el-breadcrumb v-if="breadcrumb.length > 0" separator-class="el-icon-arrow-right" class="sub-breadcrumb">
+          <el-breadcrumb-item>当前位置: </el-breadcrumb-item>
+          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+          <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+          <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+        </el-breadcrumb>
         <slot></slot>
       </div>
     </div>
@@ -24,7 +30,27 @@
 			friendly: {
 				type: Boolean,
 				default: false
-			}
+			},
+			/***
+       * @description 是否为首页展示模式
+			 */
+			menutype: {
+				type: Boolean,
+				default: false
+      },
+
+			/**
+       * @description 面包屑展示
+       * @type Array
+			 */
+			breadcrumb:{
+				type: Array,
+				default: ()=>{
+					return [
+						{title: '首页', url: ''}
+          ]
+        }
+      }
 		},
 		date() {
 			return {
@@ -33,7 +59,7 @@
 			}
 		},
 		computed: {
-			...mapState(['$md5', '$base64', '$page', '$lodash', '$helper', '$loading', '$title', '$jquery', '$loadingPrivate', '$contentHeight']),
+			...mapState(['$page', '$lodash', '$helper','$contentHeight', '$pageWidth']),
 		},
 
 		created() {
@@ -56,8 +82,6 @@
 		},
 		methods: {
 			...mapActions(['LOADING', 'SAVE_VUE_OBJECT']),
-			...mapMutations(['SET_CONTENT_HEIGHT']),
-
 		}
 	}
 </script>
@@ -66,26 +90,27 @@
   .dev-container {
     width: 100%;
   }
-  
-  .sub-content {
+  .sub-content-box {
+    width: 100%;
     background: #f4f4f4;
   }
   
+  .sub-content {
+    margin: 0 auto;
+  }
+  
+  
   .sub-breadcrumb {
     height: 50px;
-    font-size: 16px;
-    padding: 0 25px;
+    font-size: 13px;
     line-height: 50px;
-    border-bottom: #f4f4f4 solid 1px;
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#fefefe+0,f4f4f4+100 */
-    background: #fff; /* Old browsers */
-    background: -moz-linear-gradient(top, #fefefe 0%, #f4f4f4 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, #fefefe 0%, #f4f4f4 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, #fefefe 0%, #f4f4f4 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fefefe', endColorstr='#f4f4f4', GradientType=0); /* IE6-9 */
-    
-    
   }
+  
+  /deep/ .el-breadcrumb__separator[class*=icon] {
+    margin: 0 2px;
+  }
+  
+  
   
   .noaccess {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;

@@ -1,45 +1,9 @@
 <template>
-    <layout :padding="0">
-        <div style="display: none" id="demo">
-            <div class="demo-btn">
-                <a href="javascript:void(0)" @click="dataSave">data导出Excel</a>
-                <a href="javascript:void(0)" @click="tableSave">table导出Excel</a>
-                <a href="javascript:void(0)" @click="showLoading">显示/隐藏LOADING</a>
-                <a href="javascript:void(0)" @click="urlJump(false)">Route 当前页面打开</a>
-                <a href="javascript:void(0)" @click="urlJump(true)">Route 新页面打开</a>
-            </div>
-
-            <table class="table" v-show="0">
-                <tr>
-                    <td>a</td>
-                    <td>a</td>
-                    <td>a</td>
-                    <td>a</td>
-                </tr>
-
-                <tr>
-                    <td>a</td>
-                    <td>a</td>
-                </tr>
-                <tr>
-                    <td>a</td>
-                    <td>a</td>
-                </tr>
-                <tr>
-                    <td>a</td>
-                    <td>a</td>
-                    <td>a</td>
-                    <td>a</td>
-                    <td>a</td>
-                    <td>a</td>
-                </tr>
-            </table>
+    <layout :padding="0" friendly>
+        <div style="width: 500px; padding: 50px 0; margin: 0 auto">
+            <el-input class="testClass" type="number" v-model="munber" placeholder="输入金额"></el-input>
+            <div class="testClass" ref="testdom"><strong>RMB:</strong><span v-html="munbertoUpperCase"></span></div>
         </div>
-        <iframe src="https://www.baidu.com" :height="$iframeHeight" frameborder="0" width="100%"></iframe>
-<!--        <div style="width: 500px; padding: 50px 0; margin: 0 auto">-->
-<!--            <el-input class="testClass" type="number" v-model="munber" placeholder="输入金额"></el-input>-->
-<!--            <div class="testClass" ref="testdom"><strong>RMB:</strong><span v-html="munbertoUpperCase"></span></div>-->
-<!--        </div>-->
     </layout>
 </template>
 
