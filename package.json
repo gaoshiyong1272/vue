@@ -68,7 +68,7 @@
         "html-webpack-plugin": "^2.28.0",
         "http-proxy-middleware": "^0.18.0",
         "minimist": "^1.2.0",
-        "node-sass": "^4.9.3",
+        "node-sass": "^4.13.1",
         "opn": "^5.3.0",
         "optimize-css-assets-webpack-plugin": "^2.0.0",
         "ora": "^1.4.0",
