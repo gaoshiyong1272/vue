@@ -26,7 +26,7 @@
         "js-base64": "^2.5.1",
         "load-script": "^1.0.0",
         "moment": "^2.22.2",
-        "node-notifier": "^6.0.0",
+        "node-notifier": "^8.0.1",
         "simple-pinyin": "^3.0.2",
         "vue": "^2.5.17",
         "vue-clipboard2": "^0.3.1",
